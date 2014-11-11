@@ -11,6 +11,7 @@ from copy import deepcopy
 import numpy as np
 from numpy import ma
 
+from ..io import registry as io_registry
 from ..units import Unit, Quantity
 from ..utils.compat import NUMPY_LT_1_8
 from ..utils.console import color_print
@@ -835,6 +836,19 @@ class Column(BaseColumn):
     convert_unit_to = BaseColumn.convert_unit_to
     quantity = BaseColumn.quantity
     to = BaseColumn.to
+
+    @classmethod
+    def read(cls, *args, **kwargs):
+        """
+        Read a Column.
+        """
+        io_registry.read(cls, *args, **kwargs)
+
+    def write(self, *args, **kwargs):
+        """
+        Write a Column.
+        """
+        io_registry.write(self, *args, **kwargs)
 
 
 class MaskedColumn(Column, _MaskedColumnGetitemShim, ma.MaskedArray):

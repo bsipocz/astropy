@@ -7,7 +7,7 @@ import re
 import functools
 
 from .. import registry as io_registry
-from ...table import Table
+from ...table import Table, Column
 from ...extern.six.moves import zip
 
 __all__ = []
@@ -24,11 +24,25 @@ def read_asciitable(filename, **kwargs):
 io_registry.register_reader('ascii', Table, read_asciitable)
 
 
+def read_asciicolumn(filename, **kwargs):
+    from .ui import read
+    return read(filename, **kwargs).columns[0]
+
+io_registry.register_reader('ascii', Column, read_asciicolumn)
+
+
 def write_asciitable(table, filename, **kwargs):
     from .ui import write
     return write(table, filename, **kwargs)
 
 io_registry.register_writer('ascii', Table, write_asciitable)
+
+
+def write_asciicolumn(column, filename, **kwargs):
+    from .ui import write
+    return write([column,], filename, **kwargs)
+
+io_registry.register_writer('ascii', Column, write_asciicolumn)
 
 
 def io_read(format, filename, **kwargs):
