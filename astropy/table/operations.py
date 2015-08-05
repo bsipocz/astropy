@@ -4,6 +4,7 @@ High-level table operations:
 - join()
 - hstack()
 - vstack()
+- unique()
 """
 # Licensed under a 3-clause BSD style license - see LICENSE.rst
 from __future__ import (absolute_import, division, print_function,
@@ -29,7 +30,7 @@ __all__ = ['join', 'hstack', 'vstack', 'unique']
 
 
 def _merge_col_meta(out, tables, col_name_map, idx_left=0, idx_right=1,
-                    metadata_conflicts='warn'):
+                    metadata_conflicts='warn', merge_func=metadata.concat):
     """
     Merge column meta data for the ``out`` table.
 
@@ -50,6 +51,7 @@ def _merge_col_meta(out, tables, col_name_map, idx_left=0, idx_right=1,
                 right_col = table[right_name]
                 out_col.info.meta = metadata.merge(left_col.info.meta or {},
                                                    right_col.info.meta or {},
+                                                   merge_func=merge_func,
                                                    metadata_conflicts=metadata_conflicts)
                 for attr in attrs:
 
@@ -95,10 +97,12 @@ def _merge_col_meta(out, tables, col_name_map, idx_left=0, idx_right=1,
                         pass
 
 
-def _merge_table_meta(out, tables, metadata_conflicts='warn'):
+def _merge_table_meta(out, tables, metadata_conflicts='warn',
+                      merge_func=metadata.concat):
     out_meta = deepcopy(tables[0].meta)
     for table in tables[1:]:
-        out_meta = metadata.merge(out_meta, table.meta, metadata_conflicts=metadata_conflicts)
+        out_meta = metadata.merge(out_meta, table.meta, merge_func=merge_func,
+                                  metadata_conflicts=metadata_conflicts)
     out.meta.update(out_meta)
 
 
@@ -140,7 +144,8 @@ def _get_out_class(tables):
 
 def join(left, right, keys=None, join_type='inner',
          uniq_col_name='{col_name}_{table_name}',
-         table_names=['1', '2'], metadata_conflicts='warn'):
+         table_names=['1', '2'], metadata_conflicts='warn',
+         metadata_merge_func=metadata.concat):
     """
     Perform a join of the left table with the right table on specified keys.
 
@@ -186,13 +191,16 @@ def join(left, right, keys=None, join_type='inner',
 
     # Merge the column and table meta data. Table subclasses might override
     # these methods for custom merge behavior.
-    _merge_col_meta(out, [left, right], col_name_map, metadata_conflicts=metadata_conflicts)
-    _merge_table_meta(out, [left, right], metadata_conflicts=metadata_conflicts)
+    _merge_col_meta(out, [left, right], col_name_map, metadata_conflicts=metadata_conflicts,
+                    merge_func=metadata_merge_func)
+    _merge_table_meta(out, [left, right], metadata_conflicts=metadata_conflicts,
+                      merge_func=metadata_merge_func)
 
     return out
 
 
-def vstack(tables, join_type='outer', metadata_conflicts='warn'):
+def vstack(tables, join_type='outer', metadata_conflicts='warn',
+           metadata_merge_func=metadata.concat):
     """
     Stack tables vertically (along rows)
 
@@ -253,15 +261,17 @@ def vstack(tables, join_type='outer', metadata_conflicts='warn'):
     out = _vstack(tables, join_type, col_name_map)
 
     # Merge column and table metadata
-    _merge_col_meta(out, tables, col_name_map, metadata_conflicts=metadata_conflicts)
-    _merge_table_meta(out, tables, metadata_conflicts=metadata_conflicts)
+    _merge_col_meta(out, tables, col_name_map, metadata_conflicts=metadata_conflicts,
+                    merge_func=metadata_merge_func)
+    _merge_table_meta(out, tables, metadata_conflicts=metadata_conflicts,
+                      merge_func=metadata_merge_func)
 
     return out
 
 
 def hstack(tables, join_type='outer',
            uniq_col_name='{col_name}_{table_name}', table_names=None,
-           metadata_conflicts='warn'):
+           metadata_conflicts='warn', metadata_merge_func=metadata.concat):
     """
     Stack tables along columns (horizontally)
 
@@ -325,8 +335,9 @@ def hstack(tables, join_type='outer',
     out = _hstack(tables, join_type, uniq_col_name, table_names,
                   col_name_map)
 
-    _merge_col_meta(out, tables, col_name_map, metadata_conflicts=metadata_conflicts)
-    _merge_table_meta(out, tables, metadata_conflicts=metadata_conflicts)
+    _merge_col_meta(out, tables, col_name_map, metadata_conflicts=metadata_conflicts,                    merge_func=metadata_merge_func)
+    _merge_table_meta(out, tables, metadata_conflicts=metadata_conflicts,
+                      merge_func=metadata_merge_func)
 
     return out
 
