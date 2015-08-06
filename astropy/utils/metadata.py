@@ -285,18 +285,30 @@ def merge(left, right, merge_func=None, metadata_conflicts='warn'):
     Merge the ``left`` and ``right`` metadata objects.
 
     This is a simplistic and limited implementation at this point.
+
+    Parameters
+    ----------
+    left : dict
+
+    right : dict
+
+    merge_func : func or None
+        If None, the metadata of either left of right is skipped and an empty
+        output is returned.
+
+    metadata_conflicts : str
+
+    Returns
+    -------
+    out : dict
+
     """
+    out = dict()
+
     if not _both_isinstance(left, right, dict):
         raise MergeConflictError('Can only merge two dict-based objects')
 
-    out = deepcopy(left)
-
     for key, val in six.iteritems(right):
-        # If no conflict then insert val into out dict and continue
-        if key not in out:
-            out[key] = deepcopy(val)
-            continue
-
         # There is a conflict that must be resolved
         if _both_isinstance(left[key], right[key], dict):
             out[key] = merge(left[key], right[key], merge_func,
