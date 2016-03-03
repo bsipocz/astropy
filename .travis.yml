@@ -29,9 +29,6 @@ env:
 
     matrix:
         - PYTHON_VERSION=2.7 SETUP_CMD='egg_info'
-        - PYTHON_VERSION=3.3 SETUP_CMD='egg_info'
-        - PYTHON_VERSION=3.4 SETUP_CMD='egg_info'
-        - PYTHON_VERSION=3.5 SETUP_CMD='egg_info'
 
 matrix:
 
@@ -39,57 +36,21 @@ matrix:
     fast_finish: true
 
     include:
-
-        # Try MacOS X
-        - os: osx
-          env: SETUP_CMD='test' CONDA_DEPENDENCIES=$CONDA_ALL_DEPENDENCIES
-
-        # Check for sphinx doc build warnings - we do this first because it
-        # runs for a long time. WCSAxes is a dependency for the docs.
-        - os: linux
-          env: PYTHON_VERSION=2.7 SETUP_CMD='build_sphinx -w'
-               CONDA_DEPENDENCIES=$CONDA_ALL_DEPENDENCIES
-               PIP_DEPENDENCIES='wcsaxes --no-deps'
-
         # Try the full monty, with all optional dependencies on an appropriate
         # 3.x build (noting the coverage) and on 2.7, both with latest numpy.
         - os: linux
-          env: SETUP_CMD='test --coverage'
+          env: SETUP_CMD='test --coverage -V'
                CONDA_DEPENDENCIES=$CONDA_ALL_DEPENDENCIES
                PIP_DEPENDENCIES='cpp-coveralls objgraph'
                LC_CTYPE=C.ascii LC_ALL=C.ascii
                CFLAGS='-ftest-coverage -fprofile-arcs -fno-inline-functions -O0'
+               DEBUG=True
         - os: linux
           env: PYTHON_VERSION=2.7 SETUP_CMD='test'
                CONDA_DEPENDENCIES=$CONDA_ALL_DEPENDENCIES
                LC_CTYPE=C.ascii LC_ALL=C.ascii
-
-        # Try other python versions with the latest numpy that they support,
-        # but without the optional dependencies
-        - os: linux
-          env: PYTHON_VERSION=3.4 SETUP_CMD='test --open-files'
-        - os: linux
-          env: PYTHON_VERSION=3.3 NUMPY_VERSION=1.9 SETUP_CMD='test --open-files'
-        # Try older numpy versions on python 2.7, without optional dependencies
-        - os: linux
-          env: PYTHON_VERSION=2.7 NUMPY_VERSION=1.9 SETUP_CMD='test'
-        - os: linux
-          env: PYTHON_VERSION=2.7 NUMPY_VERSION=1.8 SETUP_CMD='test'
-        - os: linux
-          env: PYTHON_VERSION=2.7 NUMPY_VERSION=1.7 SETUP_CMD='test'
-
-        # test with numpy development; we allow this one to fail below, since
-        # we want to know when there are problems, but not necessarily be unable
-        # to move forward ourselves.
-        - os: linux
-          env: NUMPY_VERSION=dev SETUP_CMD='test'
-
-        # Do a PEP8 test
-        - os: linux
-          env: MAIN_CMD='pep8 astropy --count' SETUP_CMD=''
-
-    allow_failures:
-        - env: NUMPY_VERSION=dev SETUP_CMD='test'
+               SETUP_CMD='test --coverage -V'
+               DEBUG=True
 
 install:
     - git clone git://github.com/astropy/ci-helpers.git
