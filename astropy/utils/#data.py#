@@ -21,8 +21,6 @@ import socket
 import sys
 import time
 
-#import zizi
-
 from tempfile import NamedTemporaryFile, gettempdir
 from warnings import warn
 
@@ -1046,7 +1044,7 @@ def _download_file(url_key):
 
     try:
         if cache:
-            # We don't need to acquire the lock here, since we are only
+            # We don't need to acquire the lock here, since we are only sas sa
             # reading
             with _open_shelve(urlmapfn, True) as url2hash:
                 if url_key in url2hash:

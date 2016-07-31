@@ -25,7 +25,7 @@ env:
         - NUMPY_VERSION=stable
         - MAIN_CMD='python setup.py'
         - CONDA_DEPENDENCIES='Cython jinja2'
-        - CONDA_ALL_DEPENDENCIES='Cython jinja2 scipy h5py matplotlib pyyaml scikit-image pandas pytz beautifulsoup4 ipython mpmath'
+        - CONDA_ALL_DEPENDENCIES='Cython jinja2 scipy<0.18 h5py matplotlib pyyaml scikit-image pandas pytz beautifulsoup4 ipython mpmath'
         - PIP_DEPENDENCIES=''
 
     matrix:
@@ -56,8 +56,8 @@ matrix:
                PIP_DEPENDENCIES='sphinx-gallery>=0.1.2 pillow wcsaxes --no-deps jplephem'
 
         # Try all python versions and Numpy versions. Since we can assume that
-        # the Numpy developers have taken care of testing Numpy with different 
-        # versions of Python, we can vary Python and Numpy versions at the same 
+        # the Numpy developers have taken care of testing Numpy with different
+        # versions of Python, we can vary Python and Numpy versions at the same
         # time. Since we test the latest Numpy as part of the builds with all
         # optional dependencies below, we can focus on older builds here.
         - os: linux
