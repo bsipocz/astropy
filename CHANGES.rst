@@ -55,9 +55,11 @@ New Features
   - Check for self-consistency of ECSV header column names. [#5463]
 
   - Produce warnings when writing an IPAC table from an astropy table that
-    contains metadata not supported by the IPAC format [#4700]
+    contains metadata not supported by the IPAC format. [#4700]
 
 - ``astropy.io.fits``
+
+  - Checking available disk space before writing out file. [#5500, #4065]
 
 - ``astropy.io.misc``
 
@@ -129,8 +131,8 @@ New Features
 
   - Added a default ``vmin/vmax`` for the ``ManualInterval`` class.
     [#5206].
-    
-  - The ``wcsaxes`` subpackage has now been integrated in astropy as 
+
+  - The ``wcsaxes`` subpackage has now been integrated in astropy as
     ``astropy.visualization.wcsaxes``.  This allows plotting of astronomical
     data/coordinate systems in Matplotlib. [#5496]
 
