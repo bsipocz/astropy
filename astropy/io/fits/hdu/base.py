@@ -650,21 +650,14 @@ class _BaseHDU(object):
     # HDUList, eventually the plan is to have this be moved into writeto()
     # somehow...
     def _writeto(self, fileobj, inplace=False, copy=False):
-        print("writeto")
-        print(self)
-        print(fileobj)
         try:
             dirname = os.path.dirname(fileobj._file.name)
-            print(fileobj._file.name)
         except AttributeError:
             dirname = None
 
-        print(dirname)
-        print("++++++++")
         with _free_space_check(self, dirname):
             # For now fileobj is assumed to be a _File object
             if not inplace or self._new:
-                print("not inplace")
                 header_offset, _ = self._writeheader(fileobj)
                 data_offset, data_size = self._writedata(fileobj)
 
@@ -679,6 +672,7 @@ class _BaseHDU(object):
             hdrsize = self._data_offset - self._header_offset
             datloc = self._data_offset
             datsize = self._data_size
+
             if self._header._modified:
                 # Seek to the original header location in the file
                 self._file.seek(hdrloc)
@@ -690,7 +684,6 @@ class _BaseHDU(object):
                 # updated here too
                 datloc = hdrloc + hdrsize
             elif copy:
-                print("copy")
                 # Seek to the original header location in the file
                 self._file.seek(hdrloc)
                 # Before writing, update the hdrloc with the current file position,
@@ -702,16 +695,15 @@ class _BaseHDU(object):
                 datloc = fileobj.tell()
 
             if self._data_loaded:
-                print("data loaded")
                 if self.data is not None:
-                    print("data not none")
-                    # Seek through the array's bases for an memmap'd array; we
-                    # can't rely on the _File object to give us this info since the
-                    # user may have replaced the previous mmap'd array
+                    # Seek through the array's bases for an memmap'd array;
+                    # we can't rely on the _File object to give us this info
+                    # since the user may have replaced the previous mmap'd
+                    # array
                     if copy or self._data_replaced:
-                        # Of course, if we're copying the data to a new file we
-                        # don't care about flushing the original mmap; instead just
-                        # read it into the new file
+                        # Of course, if we're copying the data to a new file
+                        # we don't care about flushing the original mmap;
+                        # instead just read it into the new file
                         array_mmap = None
                     else:
                         array_mmap = _get_array_mmap(self.data)
@@ -719,14 +711,11 @@ class _BaseHDU(object):
                     if array_mmap is not None:
                         array_mmap.flush()
                     else:
-                        print(self)
-                        print("mi ez itt")
                         self._file.seek(self._data_offset)
                         datloc, datsize = self._writedata(fileobj)
             elif copy:
-                print("IIIIIITTTTTTTTT")
                 datsize = self._writedata_direct_copy(fileobj)
-                print("WRRRRONG")
+
             self._header_offset = hdrloc
             self._data_offset = datloc
             self._data_size = datsize

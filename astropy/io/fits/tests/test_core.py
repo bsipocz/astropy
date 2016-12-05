@@ -1055,39 +1055,24 @@ class TestFileFunctions(FitsTestCase):
         hdul[0].data = np.arange(0, 1000)
         hdul.writeto(filename)
 
-        print("REAL START ++++++++++++++")
-        def _writedata_direct_copy(self, fileobj):
-            print("overloaded function")
+        def _writedata(self, fileobj):
             raise OSError("Fake error raised when writing file.")
 
         def get_free_space_in_dir(path):
-            return -1
+            return 0
 
-
-        monkeypatch.setattr(fits.hdu.base._BaseHDU, "_writedata",
-                            _writedata_direct_copy)
+        monkeypatch.setattr(fits.hdu.base._BaseHDU, "_writedata", _writedata)
         monkeypatch.setattr(data, "get_free_space_in_dir",
                             get_free_space_in_dir)
 
         with pytest.raises(OSError) as exc:
             with fits.open(filename, mode='update') as hdul:
-                print(filename)
-            #            print(fileobj)
-#                hdul = fits.open(filename, mode='update')
-                print('^^^^^^^^^^^^^^^^')
-                print(hdul)
-                print('^^^^^^^^^^^^^^^^')
                 hdul[0].data = np.arange(0, 1000)
                 hdul.insert(1, fits.ImageHDU())
-
-                print("prestart")
-                print(hdul)
                 hdul.flush()
+
         assert ("Not enough space on disk. Fake error raised when writing "
                 "file.") == exc.value.args[0]
-
-        hdul._file.close()
-        print("KKKKAKKKKUKKK")
 
     def _test_write_string_bytes_io(self, fileobj):
         """

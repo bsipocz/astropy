@@ -866,9 +866,6 @@ def _free_space_check(hdulist, dirname=None):
     try:
         yield
     except OSError as exc:
-        print("ez az elkalaps %%%%%%%%%%%%%%%%%%%")
-        print()
-        print()
         if not isinstance(hdulist, list):
             hdulist = [hdulist, ]
         if dirname is None:

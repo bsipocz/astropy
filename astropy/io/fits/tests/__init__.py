@@ -25,7 +25,7 @@ class FitsTestCase(object):
 
     def teardown(self):
         if hasattr(self, 'temp_dir') and os.path.exists(self.temp_dir):
-            tries = 10
+            tries = 3
             while tries:
                 try:
                     shutil.rmtree(self.temp_dir)

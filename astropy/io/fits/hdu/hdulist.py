@@ -570,7 +570,6 @@ class HDUList(list, _Verify):
             When `True`, print verbose messages
         """
 
-        print("postprestart")
         if self._file.mode not in ('append', 'update', 'ostream'):
             warnings.warn("Flush for '{}' mode is not supported."
                          .format(self._file.mode), AstropyUserWarning)
@@ -593,7 +592,9 @@ class HDUList(list, _Verify):
                 except IOError as exc:
                     raise IOError('Failed to save backup to destination {}: '
                                   '{}'.format(filename, exc))
+
         self.verify(option=output_verify)
+
         if self._file.mode in ('append', 'ostream'):
             for hdu in self:
                 if verbose:
@@ -601,6 +602,7 @@ class HDUList(list, _Verify):
                         extver = str(hdu._header['extver'])
                     except KeyError:
                         extver = ''
+
                 # only append HDU's which are "new"
                 if hdu._new:
                     hdu._prewriteto(checksum=hdu._output_checksum)
@@ -721,16 +723,19 @@ class HDUList(list, _Verify):
             When `True`, close the underlying file object.
         """
 
-        if self._file:
-            if self._file.mode in ['append', 'update']:
-                self.flush(output_verify=output_verify, verbose=verbose)
+        try:
+            if self._file:
+                if (self._file.mode in ['append', 'update']
+                        and not self._file.closed):
+                    self.flush(output_verify=output_verify, verbose=verbose)
+        finally:
+            if self._file:
+                if closed and hasattr(self._file, 'close'):
+                    self._file.close()
 
-            if closed and hasattr(self._file, 'close'):
-                self._file.close()
-
-        # Give individual HDUs an opportunity to do on-close cleanup
-        for hdu in self:
-            hdu._close(closed=closed)
+            # Give individual HDUs an opportunity to do on-close cleanup
+            for hdu in self:
+                hdu._close(closed=closed)
 
     def info(self, output=None):
         """
@@ -947,22 +952,18 @@ class HDUList(list, _Verify):
             # if the HDUList is resized, need to write out the entire contents of
             # the hdulist to the file.
             if self._resize or self._file.compression:
-                print(111118)
                 self._flush_resize()
             else:
-                print("non resize")
                 # if not resized, update in place
                 for hdu in self:
                     hdu._writeto(self._file, inplace=True)
+
             # reset the modification attributes after updating
             for hdu in self:
-                print("head_mod")
                 hdu._header._modified = False
-            print(4444)
         finally:
             for hdu in self:
                 hdu._postwriteto()
-        print("OK")
 
     def _flush_resize(self):
         """
@@ -975,7 +976,6 @@ class HDUList(list, _Verify):
         name = _tmp_name(old_name)
 
         if not self._file.file_like:
-            print("not file_like")
             old_mode = os.stat(old_name).st_mode
             # The underlying file is an actual file object.  The HDUList is
             # resized, so we need to write it to a tmp file, delete the
@@ -990,12 +990,10 @@ class HDUList(list, _Verify):
             with self.fromfile(new_file, mode='append') as hdulist:
 
                 for hdu in self:
-                    print(111111111)
                     hdu._writeto(hdulist._file, inplace=True, copy=True)
-                    print('zzzzzzzz222', hdulist._file)
                 if sys.platform.startswith('win'):
-                    # Collect a list of open mmaps to the data; this well be used
-                    # later.  See below.
+                    # Collect a list of open mmaps to the data; this well be
+                    # used later.  See below.
                     mmaps = [(idx, _get_array_mmap(hdu.data), hdu.data)
                              for idx, hdu in enumerate(self) if hdu._has_data]
 
@@ -1027,7 +1025,6 @@ class HDUList(list, _Verify):
             for hdu in self:
                 # Need to update the _file attribute and close any open mmaps
                 # on each HDU
-                print("ggggggg")
                 if hdu._has_data and _get_array_mmap(hdu.data) is not None:
                     del hdu.data
                 hdu._file = ffo
@@ -1070,7 +1067,6 @@ class HDUList(list, _Verify):
             os.remove(hdulist._file.name)
 
         # reset the resize attributes after updating
-        print("izeke")
         self._resize = False
         self._truncate = False
         for hdu in self:
