@@ -44,7 +44,7 @@ matrix:
 
         # Try MacOS X
         - os: osx
-          env: SETUP_CMD='test -P io.fits --open-files --remote-data=astropy'
+          env: SETUP_CMD='test -t astropy/io/fits/tests/test_core.py --open-files --remote-data=astropy'
                CONDA_DEPENDENCIES=$CONDA_ALL_DEPENDENCIES
                PIP_DEPENDENCIES='jplephem'
 
@@ -65,22 +65,22 @@ matrix:
         # build.
         - os: linux
           env: PYTHON_VERSION=2.7 NUMPY_VERSION=1.7
-               SETUP_CMD='test --open-files -P io.fits'
+               SETUP_CMD='test --open-files -t astropy/io/fits/tests/test_core.py'
         - os: linux
           env: PYTHON_VERSION=3.3 NUMPY_VERSION=1.8
-               SETUP_CMD='test --open-files -P io.fits'
+               SETUP_CMD='test --open-files -t astropy/io/fits/tests/test_core.py'
         - os: linux
           env: PYTHON_VERSION=3.4 NUMPY_VERSION=1.9
-               SETUP_CMD='test --open-files -P io.fits'
+               SETUP_CMD='test --open-files -t astropy/io/fits/tests/test_core.py'
         - os: linux
           env: PYTHON_VERSION=3.5 NUMPY_VERSION=1.10
-               SETUP_CMD='test --open-files -P io.fits'
+               SETUP_CMD='test --open-files -t astropy/io/fits/tests/test_core.py'
 
         # Now try with all optional dependencies the latest 3.x and on 2.7.
         # (with latest numpy). We also test the two latest matplotlib versions
         # for the image tests.
         - os: linux
-          env: PYTHON_VERSION=2.7 SETUP_CMD='test -P io.fits --open-files --remote-data=astropy -a "--mpl"'
+          env: PYTHON_VERSION=2.7 SETUP_CMD='test -t astropy/io/fits/tests/test_core.py --open-files --remote-data=astropy -a "--mpl"'
                CONDA_DEPENDENCIES=$CONDA_ALL_DEPENDENCIES
                PIP_DEPENDENCIES='jplephem mock pytest-mpl'
                LC_CTYPE=C.ascii LC_ALL=C
@@ -88,7 +88,7 @@ matrix:
                MATPLOTLIB_VERSION=1.4
 
         - os: linux
-          env: SETUP_CMD='test --coverage -P io.fits --open-files --remote-data=astropy -a "--mpl"'
+          env: SETUP_CMD='test --coverage -t astropy/io/fits/tests/test_core.py --open-files --remote-data=astropy -a "--mpl"'
                CONDA_DEPENDENCIES=$CONDA_ALL_DEPENDENCIES
                PIP_DEPENDENCIES='cpp-coveralls objgraph jplephem pytest-mpl'
                LC_CTYPE=C.ascii LC_ALL=C
