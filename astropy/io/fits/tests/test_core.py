@@ -1054,7 +1054,6 @@ class TestFileFunctions(FitsTestCase):
         hdul = fits.HDUList(hdul)
         hdul[0].data = np.arange(0, 1000)
         hdul.writeto(filename)
-        hdul.close()
 
         print("REAL START ++++++++++++++")
         def _writedata_direct_copy(self, fileobj):
@@ -1087,6 +1086,7 @@ class TestFileFunctions(FitsTestCase):
         assert ("Not enough space on disk. Fake error raised when writing "
                 "file.") == exc.value.args[0]
 
+        hdul._file.close()
         print("KKKKAKKKKUKKK")
 
     def _test_write_string_bytes_io(self, fileobj):
