@@ -6,10 +6,8 @@ import shutil
 import stat
 import tempfile
 import time
-import warnings
 
 from ... import fits
-from .... import log
 
 
 class FitsTestCase(object):
@@ -27,7 +25,7 @@ class FitsTestCase(object):
 
     def teardown(self):
         if hasattr(self, 'temp_dir') and os.path.exists(self.temp_dir):
-            tries = 3
+            tries = 10
             while tries:
                 try:
                     shutil.rmtree(self.temp_dir)
