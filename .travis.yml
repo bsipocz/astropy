@@ -121,6 +121,7 @@ install:
 
 script:
     - $MAIN_CMD $SETUP_CMD
+    - git status
 
 after_success:
     - if [[ $SETUP_CMD == 'test --coverage' ]]; then
