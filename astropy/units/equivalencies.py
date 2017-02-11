@@ -445,7 +445,7 @@ def mass_energy():
     ]
 
 def brightness_temperature(beam_area, disp):
-    """
+    r"""
     Defines the conversion between Jy/beam and "brightness temperature",
     :math:`T_B`, in Kelvins.  The brightness temperature is a unit very
     commonly used in radio astronomy.  See, e.g., "Tools of Radio Astronomy"
