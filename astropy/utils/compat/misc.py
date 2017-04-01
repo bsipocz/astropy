@@ -163,7 +163,7 @@ if sys.version_info[0] == 3 and sys.version_info[:3] < (3, 4, 4):
         namedtuple : collections.namedtuple
             The named tuple to get the dict of
         """
-        return {fi:getattr(namedtuple, fi) for fi in namedtuple._fields}
+        return {fi: getattr(namedtuple, fi) for fi in namedtuple._fields}
 else:
     def namedtuple_asdict(namedtuple):
         """

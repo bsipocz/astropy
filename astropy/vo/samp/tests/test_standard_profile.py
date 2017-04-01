@@ -156,8 +156,8 @@ class TestStandardProfile(object):
 
         params = random_params(self.tmpdir)
         self.client1.notify(self.client2.get_public_id(),
-                            {'samp.mtype':'table.load.votable',
-                             'samp.params':params})
+                            {'samp.mtype': 'table.load.votable',
+                             'samp.params': params})
 
         assert_output('table.load.votable', self.client2.get_private_key(),
                       self.client1_id, params, timeout=60)
@@ -172,8 +172,8 @@ class TestStandardProfile(object):
         # Test notify_all
 
         params = random_params(self.tmpdir)
-        self.client1.notify_all({'samp.mtype':'table.load.votable',
-                                 'samp.params':params})
+        self.client1.notify_all({'samp.mtype': 'table.load.votable',
+                                 'samp.params': params})
 
         assert_output('table.load.votable', self.client2.get_private_key(),
                       self.client1_id, params, timeout=60)
@@ -188,8 +188,8 @@ class TestStandardProfile(object):
 
         params = random_params(self.tmpdir)
         self.client1.call(self.client2.get_public_id(), 'test-tag',
-                            {'samp.mtype':'table.load.votable',
-                             'samp.params':params})
+                            {'samp.mtype': 'table.load.votable',
+                             'samp.params': params})
 
         assert_output('table.load.votable', self.client2.get_private_key(),
                       self.client1_id, params, timeout=60)
@@ -205,8 +205,8 @@ class TestStandardProfile(object):
 
         params = random_params(self.tmpdir)
         self.client1.call_all('tag1',
-                              {'samp.mtype':'table.load.votable',
-                               'samp.params':params})
+                              {'samp.mtype': 'table.load.votable',
+                               'samp.params': params})
 
         assert_output('table.load.votable', self.client2.get_private_key(),
                       self.client1_id, params, timeout=60)
@@ -222,8 +222,8 @@ class TestStandardProfile(object):
 
         params = random_params(self.tmpdir)
         result = self.client1.call_and_wait(self.client2.get_public_id(),
-                                            {'samp.mtype':'table.load.votable',
-                                             'samp.params':params}, timeout=5)
+                                            {'samp.mtype': 'table.load.votable',
+                                             'samp.params': params}, timeout=5)
 
         assert result == TEST_REPLY
         assert_output('table.load.votable', self.client2.get_private_key(),

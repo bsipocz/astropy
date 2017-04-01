@@ -369,10 +369,10 @@ class HTML(core.BaseReader):
         with w.tag('html'):
             with w.tag('head'):
                 # Declare encoding and set CSS style for table
-                with w.tag('meta', attrib={'charset':'utf-8'}):
+                with w.tag('meta', attrib={'charset': 'utf-8'}):
                     pass
-                with w.tag('meta', attrib={'http-equiv':'Content-type',
-                                    'content':'text/html;charset=UTF-8'}):
+                with w.tag('meta', attrib={'http-equiv': 'Content-type',
+                                    'content': 'text/html;charset=UTF-8'}):
                     pass
                 if 'css' in self.html:
                     with w.tag('style'):
@@ -396,7 +396,7 @@ class HTML(core.BaseReader):
                     html_table_id = None
                 if 'table_class' in self.html:
                     html_table_class = self.html['table_class']
-                    attrib={"class":html_table_class}
+                    attrib={"class": html_table_class}
                 else:
                     attrib={}
                 with w.tag('table', id=html_table_id, attrib=attrib):

@@ -15,13 +15,13 @@ def test_erfa_wrapper():
     ra = np.linspace(0.0, np.pi*2.0, 5)
     dec = np.linspace(-np.pi/2.0, np.pi/2.0, 4)
 
-    aob, zob, hob, dob, rob, eo = erfa.atco13(0.0,0.0,0.0,0.0,0.0,0.0,jd,0.0,0.0,0.0,np.pi/4.0,0.0,0.0,0.0,1014.0,0.0,0.0,0.5)
+    aob, zob, hob, dob, rob, eo = erfa.atco13(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, jd, 0.0, 0.0, 0.0, np.pi/4.0, 0.0, 0.0, 0.0, 1014.0, 0.0, 0.0, 0.5)
     assert aob.shape == (121,)
 
-    aob, zob, hob, dob, rob, eo = erfa.atco13(0.0,0.0,0.0,0.0,0.0,0.0,jd[0],0.0,0.0,0.0,np.pi/4.0,0.0,0.0,0.0,1014.0,0.0,0.0,0.5)
+    aob, zob, hob, dob, rob, eo = erfa.atco13(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, jd[0], 0.0, 0.0, 0.0, np.pi/4.0, 0.0, 0.0, 0.0, 1014.0, 0.0, 0.0, 0.5)
     assert aob.shape == ()
 
-    aob, zob, hob, dob, rob, eo = erfa.atco13(ra[:,None,None],dec[None,:,None],0.0,0.0,0.0,0.0,jd[None,None,:],0.0,0.0,0.0,np.pi/4.0,0.0,0.0,0.0,1014.0,0.0,0.0,0.5)
+    aob, zob, hob, dob, rob, eo = erfa.atco13(ra[:, None, None], dec[None, :, None], 0.0, 0.0, 0.0, 0.0, jd[None, None, :], 0.0, 0.0, 0.0, np.pi/4.0, 0.0, 0.0, 0.0, 1014.0, 0.0, 0.0, 0.5)
     (aob.shape) == (5, 4, 121)
 
     iy, im, id, ihmsf = erfa.d2dtf("UTC", 3, jd, 0.0)
@@ -39,11 +39,11 @@ def test_angle_ops():
 
     sign, idmsf = erfa.a2af(6, -np.pi)
     assert sign == b'-'
-    assert (idmsf == [180,0,0,0]).all()
+    assert (idmsf == [180, 0, 0, 0]).all()
 
     sign, ihmsf = erfa.a2tf(6, np.pi)
     assert sign == b'+'
-    assert (ihmsf == [12,0,0,0]).all()
+    assert (ihmsf == [12, 0, 0, 0]).all()
 
     rad = erfa.af2a('-', 180, 0, 0.0)
     np.testing.assert_allclose(rad, -np.pi)
@@ -59,7 +59,7 @@ def test_angle_ops():
 
     sign, ihmsf = erfa.d2tf(1, -1.5)
     assert sign == b'-'
-    assert (ihmsf == [36,0,0,0]).all()
+    assert (ihmsf == [36, 0, 0, 0]).all()
 
     days = erfa.tf2d('+', 3, 0, 0.0)
     np.testing.assert_allclose(days, 0.125)
@@ -67,16 +67,16 @@ def test_angle_ops():
 
 def test_spherical_cartesian():
 
-    theta, phi = erfa.c2s([0.0,np.sqrt(2.0),np.sqrt(2.0)])
+    theta, phi = erfa.c2s([0.0, np.sqrt(2.0), np.sqrt(2.0)])
     np.testing.assert_allclose(theta, np.pi/2.0)
     np.testing.assert_allclose(phi, np.pi/4.0)
 
-    theta, phi, r = erfa.p2s([0.0,np.sqrt(2.0),np.sqrt(2.0)])
+    theta, phi, r = erfa.p2s([0.0, np.sqrt(2.0), np.sqrt(2.0)])
     np.testing.assert_allclose(theta, np.pi/2.0)
     np.testing.assert_allclose(phi, np.pi/4.0)
     np.testing.assert_allclose(r, 2.0)
 
-    theta, phi, r, td, pd, rd = erfa.pv2s([[0.0,np.sqrt(2.0),np.sqrt(2.0)],[1.0,0.0,0.0]])
+    theta, phi, r, td, pd, rd = erfa.pv2s([[0.0, np.sqrt(2.0), np.sqrt(2.0)], [1.0, 0.0, 0.0]])
     np.testing.assert_allclose(theta, np.pi/2.0)
     np.testing.assert_allclose(phi, np.pi/4.0)
     np.testing.assert_allclose(r, 2.0)
@@ -91,7 +91,7 @@ def test_spherical_cartesian():
     np.testing.assert_allclose(c, [0.0, np.sqrt(2.0)/2.0, np.sqrt(2.0)/2.0], atol=1e-14)
 
     pv = erfa.s2pv(np.pi/2.0, np.pi/4.0, 2.0, np.sqrt(2.0)/2.0, 0.0, 0.0)
-    np.testing.assert_allclose(pv, [[0.0,np.sqrt(2.0),np.sqrt(2.0)],[-1.0,0.0,0.0]], atol=1e-14)
+    np.testing.assert_allclose(pv, [[0.0, np.sqrt(2.0), np.sqrt(2.0)], [-1.0, 0.0, 0.0]], atol=1e-14)
 
 
 def test_errwarn_reporting():

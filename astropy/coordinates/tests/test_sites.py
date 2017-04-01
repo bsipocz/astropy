@@ -101,7 +101,7 @@ def test_registry():
     assert len(reg.names) == 0
 
     names = ['sitea', 'site A']
-    loc = EarthLocation.from_geodetic(lat=1*u.deg, lon=2*u.deg,height=3*u.km)
+    loc = EarthLocation.from_geodetic(lat=1*u.deg, lon=2*u.deg, height=3*u.km)
     reg.add_site(names, loc)
 
     assert len(reg.names) == 2

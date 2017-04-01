@@ -192,7 +192,7 @@ class TestColumn():
         np.testing.assert_allclose(d.to(u.km).value, ([.001, .002, .003] * u.km).value)
         np.testing.assert_allclose(d.to('km').value, ([.001, .002, .003] * u.km).value)
 
-        np.testing.assert_allclose(d.to(u.MHz,u.equivalencies.spectral()).value,
+        np.testing.assert_allclose(d.to(u.MHz, u.equivalencies.spectral()).value,
                                    [299.792458, 149.896229,  99.93081933])
 
         d_nounit = Column([1, 2, 3], name='a', dtype="f8", unit=None)
@@ -283,7 +283,7 @@ class TestColumn():
         # Out of bounds index
         with pytest.raises((ValueError, IndexError)):
             c1 = c.insert(-4, 100)
-        with pytest.raises((ValueError,IndexError)):
+        with pytest.raises((ValueError, IndexError)):
             c1 = c.insert(4, 100)
 
     def test_insert_multidim(self, Column):
@@ -448,14 +448,14 @@ def test_getitem_metadata_regression():
 
     # Make sure that meta-data gets propagated with __getitem__
 
-    c = table.Column(data=[1,2], name='a', description='b', unit='m', format="%i", meta={'c': 8})
+    c = table.Column(data=[1, 2], name='a', description='b', unit='m', format="%i", meta={'c': 8})
     assert c[1:2].name == 'a'
     assert c[1:2].description == 'b'
     assert c[1:2].unit == 'm'
     assert c[1:2].format == '%i'
     assert c[1:2].meta['c'] == 8
 
-    c = table.MaskedColumn(data=[1,2], name='a', description='b', unit='m', format="%i", meta={'c': 8})
+    c = table.MaskedColumn(data=[1, 2], name='a', description='b', unit='m', format="%i", meta={'c': 8})
     assert c[1:2].name == 'a'
     assert c[1:2].description == 'b'
     assert c[1:2].unit == 'm'
@@ -464,7 +464,7 @@ def test_getitem_metadata_regression():
 
     # As above, but with take() - check the method and the function
 
-    c = table.Column(data=[1,2,3], name='a', description='b', unit='m', format="%i", meta={'c': 8})
+    c = table.Column(data=[1, 2, 3], name='a', description='b', unit='m', format="%i", meta={'c': 8})
     for subset in [c.take([0, 1]), np.take(c, [0, 1])]:
         assert subset.name == 'a'
         assert subset.description == 'b'
@@ -484,7 +484,7 @@ def test_getitem_metadata_regression():
             assert subset.shape == ()
             assert not isinstance(subset, table.Column)
 
-    c = table.MaskedColumn(data=[1,2,3], name='a', description='b', unit='m', format="%i", meta={'c': 8})
+    c = table.MaskedColumn(data=[1, 2, 3], name='a', description='b', unit='m', format="%i", meta={'c': 8})
     for subset in [c.take([0, 1]), np.take(c, [0, 1])]:
         assert subset.name == 'a'
         assert subset.description == 'b'

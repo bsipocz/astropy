@@ -27,7 +27,7 @@ ctype_to_dtype = {'double'     : "numpy.double",
                   }
 
 
-NDIMS_REX = re.compile(re.escape("numpy.dtype([('fi0', '.*', <(.*)>)])").replace(r'\.\*','.*').replace(r'\<', '(').replace(r'\>',')'))
+NDIMS_REX = re.compile(re.escape("numpy.dtype([('fi0', '.*', <(.*)>)])").replace(r'\.\*', '.*').replace(r'\<', '(').replace(r'\>', ')'))
 
 
 class FunctionDoc(object):
@@ -350,8 +350,8 @@ class Function(object):
 class Constant(object):
 
     def __init__(self, name, value, doc):
-        self.name = name.replace("ERFA_","")
-        self.value = value.replace("ERFA_","")
+        self.name = name.replace("ERFA_", "")
+        self.value = value.replace("ERFA_", "")
         self.doc = doc
 
 

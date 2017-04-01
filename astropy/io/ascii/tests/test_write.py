@@ -547,10 +547,10 @@ def test_latex_units():
     back on the **unit** attribute of **Column** if the supplied
     **latexdict** does not specify units.
     """
-    t = table.Table([table.Column(name='date', data=['a','b']),
-               table.Column(name='NUV exp.time', data=[1,2])])
+    t = table.Table([table.Column(name='date', data=['a', 'b']),
+               table.Column(name='NUV exp.time', data=[1, 2])])
     latexdict = copy.deepcopy(ascii.latexdicts['AA'])
-    latexdict['units'] = {'NUV exp.time':'s'}
+    latexdict['units'] = {'NUV exp.time': 's'}
     out = StringIO()
     expected = '''\
 \\begin{table}{cc}
@@ -601,17 +601,17 @@ def test_byte_string_output(fast_writer):
 
 
 @pytest.mark.parametrize('names, include_names, exclude_names, formats, issues_warning', [
-    (['x', 'y'], ['x', 'y'], ['x'], {'x':'%d', 'y':'%f'}, True),
-    (['x', 'y'], ['x', 'y'], ['y'], {'x':'%d'}, False),
-    (['x', 'y'], ['x', 'y'], [], {'p':'%d', 'q':'%f'}, True),
-    (['x', 'y'], ['x', 'y'], [], {'z':'%f'}, True),
-    (['x', 'y'], ['x', 'y'], [], {'x':'%d'}, False),
-    (['x', 'y'], ['x', 'y'], [], {'p':'%d', 'y':'%f'}, True),
+    (['x', 'y'], ['x', 'y'], ['x'], {'x': '%d', 'y': '%f'}, True),
+    (['x', 'y'], ['x', 'y'], ['y'], {'x': '%d'}, False),
+    (['x', 'y'], ['x', 'y'], [], {'p': '%d', 'q': '%f'}, True),
+    (['x', 'y'], ['x', 'y'], [], {'z': '%f'}, True),
+    (['x', 'y'], ['x', 'y'], [], {'x': '%d'}, False),
+    (['x', 'y'], ['x', 'y'], [], {'p': '%d', 'y': '%f'}, True),
     (['x', 'y'], ['x', 'y'], [], {}, False)
 ])
 def test_names_with_formats(names, include_names, exclude_names, formats, issues_warning):
     """Test for #4508."""
-    t = table.Table([[1,2,3],[4.1,5.2,6.3]])
+    t = table.Table([[1, 2, 3], [4.1, 5.2, 6.3]])
     with catch_warnings(AstropyWarning) as ASwarn:
         out = StringIO()
         ascii.write(t, out, names=names, include_names=include_names,
@@ -620,17 +620,17 @@ def test_names_with_formats(names, include_names, exclude_names, formats, issues
 
 
 @pytest.mark.parametrize('formats, issues_warning', [
-    ({'p':'%d', 'y':'%f'}, True),
-    ({'x':'%d', 'y':'%f'}, True),
-    ({'z':'%f'}, True),
+    ({'p': '%d', 'y': '%f'}, True),
+    ({'x': '%d', 'y': '%f'}, True),
+    ({'z': '%f'}, True),
     ({}, False)
 ])
 def test_columns_names_with_formats(formats, issues_warning):
     """Test the fix for #4508."""
-    t = table.Table([[1,2,3],[4.1,5.2,6.3]])
+    t = table.Table([[1, 2, 3], [4.1, 5.2, 6.3]])
     with catch_warnings(AstropyWarning) as ASwarn:
         out = StringIO()
-        ascii.write(t, out,formats=formats)
+        ascii.write(t, out, formats=formats)
     assert (issues_warning == (len(ASwarn) == 1))
 
 

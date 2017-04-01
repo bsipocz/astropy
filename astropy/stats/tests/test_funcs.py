@@ -296,7 +296,7 @@ def test_midcovariance_shape():
     test that midcovariance raises error when feed 3D array
     """
     rng = np.random.RandomState(1)
-    d = rng.normal(0,1,27).reshape(3,3,3)
+    d = rng.normal(0, 1, 27).reshape(3, 3, 3)
     with pytest.raises(ValueError) as e:
         funcs.biweight_midcovariance(d)
     assert 'a.ndim should equal 2' in str(e.value)

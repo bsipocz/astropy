@@ -267,12 +267,12 @@ def test_latex_inline_scale():
 
 
 @pytest.mark.parametrize('format_spec, string', [
-    ('generic','erg / (cm2 s)'),
+    ('generic', 'erg / (cm2 s)'),
     ('s', 'erg / (cm2 s)'),
     ('console', '  erg  \n ------\n s cm^2'),
     ('latex', '$\\mathrm{\\frac{erg}{s\\,cm^{2}}}$'),
     ('latex_inline', '$\\mathrm{erg\\,s^{-1}\\,cm^{-2}}$'),
-    ('>20s','       erg / (cm2 s)')])
+    ('>20s', '       erg / (cm2 s)')])
 def test_format_styles(format_spec, string):
     fluxunit = u.erg / (u.cm ** 2 * u.s)
     assert format(fluxunit, format_spec) == string

@@ -918,7 +918,7 @@ def test_scale_conversion():
 
 def test_byteorder():
     """Ensure that bigendian and little-endian both work (closes #2942)"""
-    mjd = np.array([53000.00,54000.00])
+    mjd = np.array([53000.00, 54000.00])
     big_endian = mjd.astype('>f8')
     little_endian = mjd.astype('<f8')
     time_mjd = Time(mjd, format='mjd')

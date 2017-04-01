@@ -110,7 +110,7 @@ class TestFitting(object):
     # TODO: Most of these test cases have some pretty repetitive setup that we
     # could probably factor out
 
-    @pytest.mark.parametrize(('model_class','constraints'),
+    @pytest.mark.parametrize(('model_class', 'constraints'),
                              list(product(linear1d.keys(), (False, True))))
     def test_linear_fitter_1D(self, model_class, constraints):
         """Test fitting with LinearLSQFitter"""
@@ -140,7 +140,7 @@ class TestFitting(object):
             assert_allclose(model_lin.parameters, model.parameters,
                             atol=0.2)
 
-    @pytest.mark.parametrize(('model_class','constraints'),
+    @pytest.mark.parametrize(('model_class', 'constraints'),
                              list(product(linear1d.keys(), (False, True))))
     def test_non_linear_fitter_1D(self, model_class, constraints):
         """Test fitting with non-linear LevMarLSQFitter"""
@@ -168,7 +168,7 @@ class TestFitting(object):
             assert_allclose(model_nlin.parameters, model.parameters,
                             atol=0.2)
 
-    @pytest.mark.parametrize(('model_class','constraints'),
+    @pytest.mark.parametrize(('model_class', 'constraints'),
                              list(product(linear2d.keys(), (False, True))))
     def test_linear_fitter_2D(self, model_class, constraints):
         """Test fitting with LinearLSQFitter"""
@@ -196,7 +196,7 @@ class TestFitting(object):
             assert_allclose(model_lin.parameters, model.parameters,
                             atol=0.2)
 
-    @pytest.mark.parametrize(('model_class','constraints'),
+    @pytest.mark.parametrize(('model_class', 'constraints'),
                              list(product(linear2d.keys(), (False, True))))
     def test_non_linear_fitter_2D(self, model_class, constraints):
         """Test fitting with non-linear LevMarLSQFitter"""
@@ -307,7 +307,7 @@ def test_sip_irac():
 
 
 def test_sip_no_coeff():
-    sip = SIP([10,12], 2, 2)
+    sip = SIP([10, 12], 2, 2)
     assert_allclose(sip.sip1d_a.parameters, [0., 0., 0])
     assert_allclose(sip.sip1d_b.parameters, [0., 0., 0])
     with pytest.raises(NotImplementedError):
@@ -348,7 +348,7 @@ def test_zero_degree_polynomial(cls):
         assert p2(0, 0) == 1
         assert np.all(p2(np.zeros(5), np.zeros(5)) == np.ones(5))
 
-        y, x = np.mgrid[0:1:100j,0:1:100j]
+        y, x = np.mgrid[0:1:100j, 0:1:100j]
         z = (1 + np.random.uniform(0, 0.1, x.size)).reshape(100, 100)
 
         if issubclass(cls, OrthoPolynomialBase):

@@ -23,7 +23,7 @@ class TestQuantityArrayCopy(object):
         assert q_copy[0].value != v[0]
 
     def test_to_copies(self):
-        q = u.Quantity(np.arange(1.,100.), "km/s")
+        q = u.Quantity(np.arange(1., 100.), "km/s")
         q2 = q.to(u.m/u.s)
         assert np.all(q.value != q2.value)
         q3 = q.to(u.km/u.s)
@@ -50,7 +50,7 @@ class TestQuantityArrayCopy(object):
         assert q_sel[0] == q[10]
         # also check that getitem can do new axes
         q2 = q[:, np.newaxis]
-        q2[10,0] = -9*u.m/u.s
+        q2[10, 0] = -9*u.m/u.s
         assert np.all(q2.flatten() == q)
 
     def test_flat(self):
@@ -67,12 +67,12 @@ class TestQuantityArrayCopy(object):
         # check that flat works like a view of the real array
         q_flat[8] = -1. * u.km / u.s
         assert q_flat[8] == -1. * u.km / u.s
-        assert q[2,2] == -1. * u.km / u.s
+        assert q[2, 2] == -1. * u.km / u.s
         # while if one goes by an iterated item, a copy is made
         q_flat_list[8] = -2 * u.km / u.s
         assert q_flat_list[8] == -2. * u.km / u.s
         assert q_flat[8] == -1. * u.km / u.s
-        assert q[2,2] == -1. * u.km / u.s
+        assert q[2, 2] == -1. * u.km / u.s
 
 
 class TestQuantityReshapeFuncs(object):
@@ -363,28 +363,28 @@ class TestQuantityStatsFuncs(object):
                        reason="Numpy 1.10.4 or later is required")
     def test_trace_func(self):
 
-        q = np.array([[1.,2.],[3.,4.]]) * u.m
+        q = np.array([[1., 2.], [3., 4.]]) * u.m
         assert np.trace(q) == 5. * u.m
 
     def test_trace_meth(self):
 
-        q1 = np.array([[1.,2.],[3.,4.]]) * u.m
+        q1 = np.array([[1., 2.], [3., 4.]]) * u.m
         assert q1.trace() == 5. * u.m
 
         cont = u.Quantity(4., u.s)
 
-        q2 = np.array([[3.,4.],[5.,6.]]) * u.m
+        q2 = np.array([[3., 4.], [5., 6.]]) * u.m
         q2.trace(out=cont)
         assert cont == 9. * u.m
 
     def test_clip_func(self):
 
         q = np.arange(10) * u.m
-        assert np.all(np.clip(q, 3 * u.m, 6 * u.m) == np.array([3., 3.,3.,3.,4.,5.,6.,6.,6.,6.]) * u.m)
+        assert np.all(np.clip(q, 3 * u.m, 6 * u.m) == np.array([3., 3., 3., 3., 4., 5., 6., 6., 6., 6.]) * u.m)
 
     def test_clip_meth(self):
 
-        expected = np.array([3.,3.,3.,3.,4.,5.,6.,6.,6.,6.]) * u.m
+        expected = np.array([3., 3., 3., 3., 4., 5., 6., 6., 6., 6.]) * u.m
 
         q1 = np.arange(10) * u.m
         q3 = q1.clip(3 * u.m, 6 * u.m)
@@ -493,7 +493,7 @@ class TestArrayConversion(object):
         """
 
         a = np.random.uniform(size=(10, 8))
-        x, y, z = a[:,1:4].T * u.km/u.s
+        x, y, z = a[:, 1:4].T * u.km/u.s
         total = np.sum(a[:, 1] * u.km / u.s - x)
 
         assert isinstance(total, u.Quantity)
@@ -544,7 +544,7 @@ class TestRecArray(object):
     """Record arrays are not specifically supported, but we should not
     prevent their use unnecessarily"""
     def test_creation(self):
-        ra = (np.array(np.arange(12.).reshape(4,3))
+        ra = (np.array(np.arange(12.).reshape(4, 3))
               .view(dtype=('f8,f8,f8')).squeeze())
         qra = u.Quantity(ra, u.m)
         assert np.all(qra[:2].value == ra[:2])

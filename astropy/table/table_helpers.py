@@ -32,17 +32,17 @@ class TimingTables(object):
         self.table['i'] = np.arange(size)
         self.table['a'] = np.random.random(size)  # float
         self.table['b'] = np.random.random(size) > 0.5  # bool
-        self.table['c'] = np.random.random((size,10))  # 2d column
-        self.table['d'] = np.random.choice(np.array(list(string.ascii_letters)),size)
+        self.table['c'] = np.random.random((size, 10))  # 2d column
+        self.table['d'] = np.random.choice(np.array(list(string.ascii_letters)), size)
 
-        self.extra_row = {'a':1.2, 'b':True, 'c':np.repeat(1, 10), 'd':'Z'}
+        self.extra_row = {'a': 1.2, 'b': True, 'c': np.repeat(1, 10), 'd': 'Z'}
         self.extra_column = np.random.randint(0, 100, size)
         self.row_indices = np.where(self.table['a'] > 0.9)[0]
         self.table_grouped = self.table.group_by('d')
 
         # Another table for testing joining
         self.other_table = Table(masked=self.masked)
-        self.other_table['i'] = np.arange(1,size,3)
+        self.other_table['i'] = np.arange(1, size, 3)
         self.other_table['f'] = np.random.random()
         self.other_table.sort('f')
 

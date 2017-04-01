@@ -632,11 +632,11 @@ def test_latitude():
     assert "A Longitude angle cannot be assigned to a Latitude angle" in str(excinfo)
 
     # Check we can work around the Lat vs Long checks by casting explicitly to Angle.
-    lon = Longitude(10,'deg')
+    lon = Longitude(10, 'deg')
     lat = Latitude(Angle(lon))
     assert lat.value == 10.0
     # Check setitem.
-    lon = Longitude(10,'deg')
+    lon = Longitude(10, 'deg')
     lat = Latitude([20], 'deg')
     lat[0] = Angle(lon)
     assert lat.value[0] == 10.0
@@ -719,11 +719,11 @@ def test_longitude():
     assert "A Latitude angle cannot be assigned to a Longitude angle" in str(excinfo)
 
     # Check we can work around the Lat vs Long checks by casting explicitly to Angle.
-    lat = Latitude(10,'deg')
+    lat = Latitude(10, 'deg')
     lon = Longitude(Angle(lat))
     assert lon.value == 10.0
     # Check setitem.
-    lat = Latitude(10,'deg')
+    lat = Latitude(10, 'deg')
     lon = Longitude([20], 'deg')
     lon[0] = Angle(lat)
     assert lon.value[0] == 10.0
@@ -872,7 +872,7 @@ def test_rotation_matrix_deprecation():
 
 
 def test_angle_axis_deprecation():
-    m = np.matrix([[0., 1., 0,],
+    m = np.matrix([[0., 1., 0, ],
                    [-1, 0., 0.],
                    [0., 0., 1.]])
     with catch_warnings(AstropyDeprecationWarning):

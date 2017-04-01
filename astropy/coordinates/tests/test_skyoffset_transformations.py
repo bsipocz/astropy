@@ -47,7 +47,7 @@ def test_skyoffset_functional_ra():
                       dec=input_dec*u.deg,
                       distance=1.*u.kpc)
 
-    for ra in np.linspace(0,360,24):
+    for ra in np.linspace(0, 360, 24):
         # expected rotation
         expected = ICRS(ra=np.linspace(0-ra, 360-ra, 12)[1:-1]*u.deg,
                         dec=np.linspace(-90, 90, 12)[1:-1]*u.deg,

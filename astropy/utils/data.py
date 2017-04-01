@@ -261,7 +261,7 @@ def get_readable_fileobj(name_or_obj, encoding=None, cache=False,
         try:
             # for Python < 3.3 try backports.lzma; pyliblzma installs as lzma,
             # but does not support TextIOWrapper
-            if sys.version_info >= (3,3,0):
+            if sys.version_info >= (3, 3, 0):
                 import lzma
                 fileobj_new = lzma.LZMAFile(fileobj, mode='rb')
             else:

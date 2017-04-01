@@ -170,7 +170,7 @@ def test_kwargs_input():
     def myfunc_args(solarx=1*u.arcsec, solary=1*u.deg):
         return solarx, solary
 
-    kwargs = {'solarx':10*u.arcsec, 'solary':10*u.deg}
+    kwargs = {'solarx': 10*u.arcsec, 'solary': 10*u.deg}
     solarx, solary = myfunc_args(**kwargs)
 
     assert isinstance(solarx, u.Quantity)

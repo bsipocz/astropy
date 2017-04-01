@@ -19,7 +19,7 @@ from ..extern.six.moves import range
 
 __all__ = [
     'Chebyshev1D', 'Chebyshev2D', 'Hermite1D', 'Hermite2D',
-    'InverseSIP','Legendre1D', 'Legendre2D', 'Polynomial1D',
+    'InverseSIP', 'Legendre1D', 'Legendre2D', 'Polynomial1D',
     'Polynomial2D', 'SIP', 'OrthoPolynomialBase',
     'PolynomialModel'
 ]
@@ -520,7 +520,7 @@ class Hermite2D(OrthoPolynomialBase):
     """
 
     def __init__(self, x_degree, y_degree, x_domain=None, x_window=[-1, 1],
-                 y_domain=None, y_window=[-1,1], n_models=None,
+                 y_domain=None, y_window=[-1, 1], n_models=None,
                  model_set_axis=None, name=None, meta=None, **params):
         super(Hermite2D, self).__init__(
             x_degree, y_degree, x_domain=x_domain, y_domain=y_domain,
@@ -938,7 +938,7 @@ class Chebyshev2D(OrthoPolynomialBase):
     """
 
     def __init__(self, x_degree, y_degree, x_domain=None, x_window=[-1, 1],
-                 y_domain=None, y_window=[-1,1], n_models=None,
+                 y_domain=None, y_window=[-1, 1], n_models=None,
                  model_set_axis=None, name=None, meta=None, **params):
         super(Chebyshev2D, self).__init__(
             x_degree, y_degree, x_domain=x_domain, y_domain=y_domain,

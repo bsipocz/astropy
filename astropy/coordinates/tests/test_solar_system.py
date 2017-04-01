@@ -326,7 +326,7 @@ def test_earth_barycentric_velocity_rough():
 
 def test_earth_barycentric_velocity_multi_d():
     # Might as well test it with a multidimensional array too.
-    t = Time('2016-03-20T12:30:00') + np.arange(8.).reshape(2,2,2) * u.yr / 2.
+    t = Time('2016-03-20T12:30:00') + np.arange(8.).reshape(2, 2, 2) * u.yr / 2.
     ep, ev = get_body_barycentric_posvel('earth', t)
     # note: assert_quantity_allclose doesn't like the shape mismatch.
     # this is a problem with np.testing.assert_allclose.
@@ -355,7 +355,7 @@ def test_barycentric_velocity_consistency(body, pos_tol, vel_tol):
     assert_quantity_allclose(ep.xyz, dp.xyz, atol=pos_tol)
     assert_quantity_allclose(ev.xyz, dv.xyz, atol=vel_tol)
     # Might as well test it with a multidimensional array too.
-    t = Time('2016-03-20T12:30:00') + np.arange(8.).reshape(2,2,2) * u.yr / 2.
+    t = Time('2016-03-20T12:30:00') + np.arange(8.).reshape(2, 2, 2) * u.yr / 2.
     ep, ev = get_body_barycentric_posvel(body, t, ephemeris='builtin')
     dp, dv = get_body_barycentric_posvel(body, t, ephemeris='de432s')
     assert_quantity_allclose(ep.xyz, dp.xyz, atol=pos_tol)

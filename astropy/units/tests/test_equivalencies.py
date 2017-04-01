@@ -124,7 +124,7 @@ def test_doppler_energy_circle(function):
     np.testing.assert_almost_equal(en.value, shifted.value, decimal=7)
 
 
-values_ghz = (999.899940784289,999.8999307714406,999.8999357778647)
+values_ghz = (999.899940784289, 999.8999307714406, 999.8999357778647)
 @pytest.mark.parametrize(('function', 'value'),
                          list(zip(doppler_functions, values_ghz)))
 def test_30kms(function, value):

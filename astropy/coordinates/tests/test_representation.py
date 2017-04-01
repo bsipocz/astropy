@@ -692,9 +692,9 @@ class TestCartesianRepresentation(object):
 
     def test_transform(self):
 
-        s1 = CartesianRepresentation(x=[1,2] * u.kpc, y=[3,4] * u.kpc, z=[5,6] * u.kpc)
+        s1 = CartesianRepresentation(x=[1, 2] * u.kpc, y=[3, 4] * u.kpc, z=[5, 6] * u.kpc)
 
-        matrix = np.array([[1,2,3], [4,5,6], [7,8,9]])
+        matrix = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
 
         s2 = s1.transform(matrix)
 
@@ -978,7 +978,7 @@ def test_representation_repr():
 
 def test_representation_repr_multi_d():
     """Regression test for #5889."""
-    cr = CartesianRepresentation(np.arange(27).reshape(3,3,3), unit='m')
+    cr = CartesianRepresentation(np.arange(27).reshape(3, 3, 3), unit='m')
     assert repr(cr) == (
         '<CartesianRepresentation (x, y, z) in m\n'
         '    [[( 0.,   9.,  18.), ( 1.,  10.,  19.), ( 2.,  11.,  20.)],\n'
@@ -1005,7 +1005,7 @@ def test_representation_str():
 
 def test_representation_str_multi_d():
     """Regression test for #5889."""
-    cr = CartesianRepresentation(np.arange(27).reshape(3,3,3), unit='m')
+    cr = CartesianRepresentation(np.arange(27).reshape(3, 3, 3), unit='m')
     assert str(cr) == (
         '[[( 0.,   9.,  18.), ( 1.,  10.,  19.), ( 2.,  11.,  20.)],\n'
         ' [( 3.,  12.,  21.), ( 4.,  13.,  22.), ( 5.,  14.,  23.)],\n'

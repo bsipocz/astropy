@@ -234,7 +234,7 @@ def test_c_projections_shaped():
 
     utils.assert_allclose(
         phi,
-        [[0., 90., 90., 90., 90.,],
+        [[0., 90., 90., 90., 90., ],
          [180., 165.96375653, 153.43494882, 143.13010235, 135.]])
 
     utils.assert_allclose(

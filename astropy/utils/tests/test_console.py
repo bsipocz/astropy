@@ -191,8 +191,8 @@ def test_progress_bar_as_generator():
         sum += x
     assert sum == 1225
 
-@pytest.mark.parametrize(("seconds","string"),
-       [(864088," 1w 3d"),
+@pytest.mark.parametrize(("seconds", "string"),
+       [(864088, " 1w 3d"),
        (187213, " 2d 4h"),
        (3905,   " 1h 5m"),
        (64,     " 1m 4s"),
@@ -203,8 +203,8 @@ def test_human_time(seconds, string):
     human_time = console.human_time(seconds)
     assert human_time == string
 
-@pytest.mark.parametrize(("size","string"),
-       [(8640882,"8.6M"),
+@pytest.mark.parametrize(("size", "string"),
+       [(8640882, "8.6M"),
        (187213, "187k"),
        (3905,   "3.9k"),
        (64,     " 64 "),

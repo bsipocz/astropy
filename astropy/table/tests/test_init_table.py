@@ -28,19 +28,19 @@ class TestTableColumnsInit():
         x1 = np.arange(10.)
         x2 = np.arange(5.)
         x3 = np.arange(7.)
-        col_list = [('x1',x1), ('x2',x2), ('x3',x3)]
+        col_list = [('x1', x1), ('x2', x2), ('x3', x3)]
         tc_list = TableColumns(col_list)
         for col in col_list:
             assert col[0] in tc_list
             assert tc_list[col[0]] is col[1]
 
-        col_tuple = (('x1',x1), ('x2',x2), ('x3',x3))
+        col_tuple = (('x1', x1), ('x2', x2), ('x3', x3))
         tc_tuple = TableColumns(col_tuple)
         for col in col_tuple:
             assert col[0] in tc_tuple
             assert tc_tuple[col[0]] is col[1]
 
-        col_dict = dict([('x1',x1), ('x2',x2), ('x3',x3)])
+        col_dict = dict([('x1', x1), ('x2', x2), ('x3', x3)])
         tc_dict = TableColumns(col_dict)
         for col in tc_dict.keys():
             assert col in tc_dict

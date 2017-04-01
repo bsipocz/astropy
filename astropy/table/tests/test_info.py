@@ -42,9 +42,9 @@ def test_table_info_attributes(table_types):
     t['d'] = [1, 2, 3] * u.m
     t['d'].description = 'quantity'
     t['a'].format = '%02d'
-    t['e'] = time.Time([1,2,3], format='mjd')
+    t['e'] = time.Time([1, 2, 3], format='mjd')
     t['e'].info.description = 'time'
-    t['f'] = coordinates.SkyCoord([1,2,3], [1,2,3], unit='deg')
+    t['f'] = coordinates.SkyCoord([1, 2, 3], [1, 2, 3], unit='deg')
     t['f'].info.description = 'skycoord'
 
     tinfo = t.info(out=None)

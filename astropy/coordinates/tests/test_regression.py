@@ -361,7 +361,7 @@ def test_regression_5889_5890():
     greenwich = EarthLocation(
         *u.Quantity([3980608.90246817, -102.47522911,  4966861.27310067],
         unit=u.m))
-    times = Time("2017-03-20T12:00:00") + np.linspace(-2,2,3)*u.hour
+    times = Time("2017-03-20T12:00:00") + np.linspace(-2, 2, 3)*u.hour
     moon = get_moon(times, location=greenwich)
     targets = SkyCoord([350.7*u.deg, 260.7*u.deg], [18.4*u.deg, 22.4*u.deg])
     targs2d = targets[:, np.newaxis]

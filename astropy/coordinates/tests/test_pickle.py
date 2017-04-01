@@ -51,17 +51,17 @@ _args = [[0.0],
          [np.identity(3), coord.ICRS, coord.ICRS],
          ]
 
-_kwargs = [{'unit':'radian'},
-           {'z':0.23},
+_kwargs = [{'unit': 'radian'},
+           {'z': 0.23},
            {},
-           {'unit':['radian', 'radian']},
-           {'unit':'radian'},
-           {'unit':'radian'},
+           {'unit': ['radian', 'radian']},
+           {'unit': 'radian'},
+           {'unit': 'radian'},
            {},
            ]
 
 
-@pytest.mark.parametrize(("name","args","kwargs","xfail"),
+@pytest.mark.parametrize(("name", "args", "kwargs", "xfail"),
                          zip(_names, _args, _kwargs, _xfail))
 def test_simple_object(pickle_protocol, name, args, kwargs, xfail):
     # Tests easily instantiated objects

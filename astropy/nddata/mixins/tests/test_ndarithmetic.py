@@ -873,7 +873,7 @@ def test_deprecated_functions_still_working():
                                      "though operands were unitless")
             data = data.value
             new_wcs = deepcopy(self.wcs)
-            result = self.__class__(data, uncertainty=None,mask=None, wcs=new_wcs,
+            result = self.__class__(data, uncertainty=None, mask=None, wcs=new_wcs,
                                     meta=None, unit=result_unit)
             if operand.uncertainty:
                 operand_uncert_value = operand.uncertainty.array

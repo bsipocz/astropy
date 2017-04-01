@@ -359,12 +359,12 @@ class TestJoin():
         # on multi-dimensional columns.
 
         t1 = Table()
-        t1['a'] = [1,2,3]
-        t1['b'] = np.ones((3,4))
+        t1['a'] = [1, 2, 3]
+        t1['b'] = np.ones((3, 4))
 
         t2 = Table()
-        t2['a'] = [1,2,3]
-        t2['c'] = [4,5,6]
+        t2['a'] = [1, 2, 3]
+        t2['c'] = [4, 5, 6]
 
         t3 = table.join(t1, t2)
 

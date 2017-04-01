@@ -106,7 +106,7 @@ class TestQuantityCreation(object):
         assert q2.unit == q1.unit
 
         # but we should preserve float32
-        a3 = np.array([1.,2.], dtype=np.float32)
+        a3 = np.array([1., 2.], dtype=np.float32)
         q3 = u.Quantity(a3, u.yr)
         assert q3.dtype == a3.dtype
         # items stored as objects by numpy should be converted to float
@@ -823,7 +823,7 @@ def test_arrays():
 
     # but with multiple dtypes, single elements are OK; need to use str()
     # since numpy under python2 cannot handle unicode literals
-    a = np.array([(1.,2.,3.), (4.,5.,6.), (7.,8.,9.)],
+    a = np.array([(1., 2., 3.), (4., 5., 6.), (7., 8., 9.)],
                  dtype=[(str('x'), np.float),
                         (str('y'), np.float),
                         (str('z'), np.float)])
@@ -1262,7 +1262,7 @@ class TestSpecificTypeQuantity(object):
         assert type(v) is self.Length
         assert v._unit is None
 
-        l3 = np.ones((2,2)).view(self.Length3)
+        l3 = np.ones((2, 2)).view(self.Length3)
         assert type(l3) is self.Length3
         assert l3.unit is self.Length3._unit
 

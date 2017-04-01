@@ -78,7 +78,7 @@ for rt_frame0 in rt_frames:
                         rt_sets.append((rt_frame0, rt_frame1,
                                         equinox0, equinox1,
                                         obstime0, obstime1))
-rt_args = ('frame0','frame1','equinox0','equinox1','obstime0','obstime1')
+rt_args = ('frame0', 'frame1', 'equinox0', 'equinox1', 'obstime0', 'obstime1')
 
 
 @pytest.mark.parametrize(rt_args, rt_sets)
@@ -690,7 +690,7 @@ for base_unit_attr_set in base_unit_attr_sets:
                     c2 = np.array(c2)
                     c3 = np.array(c3)
                 units_attr_sets.append(base_unit_attr_set + (representation, c1, c2, c3))
-units_attr_args = ('repr_name','unit1','unit2','unit3','cls2','attr1','attr2','attr3','representation','c1','c2','c3')
+units_attr_args = ('repr_name', 'unit1', 'unit2', 'unit3', 'cls2', 'attr1', 'attr2', 'attr3', 'representation', 'c1', 'c2', 'c3')
 
 
 @pytest.mark.parametrize(units_attr_args,
@@ -798,7 +798,7 @@ def test_galactic_spherical_two_components(repr_name, unit1, unit2, unit3, cls2,
     assert_quantities_allclose(sc, (c1*unit1, c2*unit2), (attr1, attr2))
 
 
-@pytest.mark.parametrize(('repr_name','unit1','unit2','unit3','cls2','attr1','attr2','attr3'),
+@pytest.mark.parametrize(('repr_name', 'unit1', 'unit2', 'unit3', 'cls2', 'attr1', 'attr2', 'attr3'),
                          [x for x in base_unit_attr_sets if x[0] != 'unitspherical'])
 def test_skycoord_coordinate_input(repr_name, unit1, unit2, unit3, cls2, attr1, attr2, attr3):
     c1, c2, c3 = 1, 2, 3
@@ -1057,8 +1057,8 @@ def test_guess_from_table():
 
     tab = Table()
     with NumpyRNGContext(987654321):
-        tab.add_column(Column(data=np.random.rand(1000),unit='deg',name='RA[J2000]'))
-        tab.add_column(Column(data=np.random.rand(1000),unit='deg',name='DEC[J2000]'))
+        tab.add_column(Column(data=np.random.rand(1000), unit='deg', name='RA[J2000]'))
+        tab.add_column(Column(data=np.random.rand(1000), unit='deg', name='DEC[J2000]'))
 
     sc = SkyCoord.guess_from_table(tab)
     npt.assert_array_equal(sc.ra.deg, tab['RA[J2000]'])
@@ -1296,7 +1296,7 @@ def test_frame_attr_changes():
 
     # doesn't matter what this does as long as it just puts the frame in the
     # transform graph
-    transset = (ICRS, FakeFrame, lambda c,f:c)
+    transset = (ICRS, FakeFrame, lambda c, f: c)
     frame_transform_graph.add_transform(*transset)
     try:
         assert 'fakeattr' in dir(sc_before)
@@ -1351,7 +1351,7 @@ def test_extra_attributes():
 
     Regression test against #5743.
     """
-    obstime_string = ['2017-01-01T00:00','2017-01-01T00:10']
+    obstime_string = ['2017-01-01T00:00', '2017-01-01T00:10']
     obstime = Time(obstime_string)
     sc = SkyCoord([5, 10], [20, 30], unit=u.deg, obstime=obstime_string)
     assert not hasattr(sc.frame, 'obstime')

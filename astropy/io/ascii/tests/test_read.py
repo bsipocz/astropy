@@ -775,11 +775,11 @@ def get_testfiles(name=None):
          'nrows': 2,
          'opts': {'delimiter': r'\s'}},
         {'name': 't/simple_csv.csv',
-         'cols': ('a','b','c'),
+         'cols': ('a', 'b', 'c'),
          'nrows': 2,
          'opts': {'Reader': ascii.Csv}},
         {'name': 't/simple_csv_missing.csv',
-         'cols': ('a','b','c'),
+         'cols': ('a', 'b', 'c'),
          'nrows': 2,
          'skip': True,
          'opts': {'Reader': ascii.Csv}},
@@ -886,7 +886,7 @@ def test_sextractor_last_column_array():
                        'Right ascension of barycenter (J2000)',
                        'Declination of barycenter (J2000)',
                        'Kron-like elliptical aperture magnitude',
-                       'RMS error for AUTO magnitude',] + [
+                       'RMS error for AUTO magnitude', ] + [
                        'Fixed aperture magnitude vector'] * 7 + [
                        'RMS error vector for fixed aperture mag.'] * 7
     for i, colname in enumerate(table.colnames):
@@ -949,7 +949,7 @@ def test_guessing_file_object():
     Test guessing a file object.  Fixes #3013 and similar issue noted in #3019.
     """
     t = ascii.read(open('t/ipac.dat.bz2', 'rb'))
-    assert t.colnames == ['ra','dec','sai','v2','sptype']
+    assert t.colnames == ['ra', 'dec', 'sai', 'v2', 'sptype']
 
 
 def test_pformat_roundtrip():

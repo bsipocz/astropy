@@ -1090,7 +1090,7 @@ def biweight_midcovariance(a, c=9.0, M=None, transpose=False):
     # Ensure a is 2D
     if a.ndim != 2:
         if a.ndim == 1:
-            a = a[np.newaxis,:]
+            a = a[np.newaxis, :]
         else:
             raise ValueError("a.ndim should equal 2")
 

@@ -188,8 +188,8 @@ def test_frame_repr():
                         '    ( 1.,  2.,  3.)>')
 
     # try with arrays
-    i2 = ICRS(ra=[1.1,2.1]*u.deg, dec=[2.1,3.1]*u.deg)
-    i3 = ICRS(ra=[1.1,2.1]*u.deg, dec=[-15.6,17.1]*u.deg, distance=[11.,21.]*u.kpc)
+    i2 = ICRS(ra=[1.1, 2.1]*u.deg, dec=[2.1, 3.1]*u.deg)
+    i3 = ICRS(ra=[1.1, 2.1]*u.deg, dec=[-15.6, 17.1]*u.deg, distance=[11., 21.]*u.kpc)
 
     assert repr(i2) == ('<ICRS Coordinate: (ra, dec) in deg\n'
                         '    [( 1.1,  2.1), ( 2.1,  3.1)]>')
@@ -208,7 +208,7 @@ def test_converting_units():
 
     # Use values that aren't subject to rounding down to X.9999...
     i2 = ICRS(ra=2.*u.deg, dec=2.*u.deg)
-    i2_many = ICRS(ra=[2.,4.]*u.deg, dec=[2.,-8.1]*u.deg)
+    i2_many = ICRS(ra=[2., 4.]*u.deg, dec=[2., -8.1]*u.deg)
 
     #converting from FK5 to ICRS and back changes the *internal* representation,
     # but it should still come out in the preferred form
@@ -357,7 +357,7 @@ def test_transform_to_nonscalar_nodata_frame():
     # https://github.com/astropy/astropy/pull/5254#issuecomment-241592353
     from ..builtin_frames import ICRS, FK5
     from ...time import Time
-    times = Time('2016-08-23') + np.linspace(0,10,12)*u.day
+    times = Time('2016-08-23') + np.linspace(0, 10, 12)*u.day
     coo1 = ICRS(ra=[[0.], [10.], [20.]]*u.deg,
                 dec=[[-30.], [30.], [60.]]*u.deg)
     coo2 = coo1.transform_to(FK5(equinox=times))

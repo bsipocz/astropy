@@ -367,7 +367,7 @@ class TestQuantityMathFuncs(object):
     def test_copysign_array(self):
         assert np.all(np.copysign(np.array([1., 2., 3.]) * u.s, -1.) == -np.array([1., 2., 3.]) * u.s)
         assert np.all(np.copysign(np.array([1., 2., 3.]) * u.s, -1. * u.m) == -np.array([1., 2., 3.]) * u.s)
-        assert np.all(np.copysign(np.array([1., 2., 3.]) * u.s, np.array([-2.,2.,-4.]) * u.m) == np.array([-1., 2., -3.]) * u.s)
+        assert np.all(np.copysign(np.array([1., 2., 3.]) * u.s, np.array([-2., 2., -4.]) * u.m) == np.array([-1., 2., -3.]) * u.s)
 
         q = np.copysign(np.array([1., 2., 3.]), -3 * u.m)
         assert np.all(q == np.array([-1., -2., -3.]))

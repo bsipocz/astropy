@@ -2905,7 +2905,7 @@ reduce these to 2 dimensions using the naxis kwarg.
         swapped
         """
         inds = list(range(self.wcs.naxis))
-        inds[ax0],inds[ax1] = inds[ax1],inds[ax0]
+        inds[ax0], inds[ax1] = inds[ax1], inds[ax0]
 
         return self.sub([i+1 for i in inds])
 

@@ -99,7 +99,7 @@ class TestInput():
         self.lon = Longitude([0., 45., 90., 135., 180., -180, -90, -45], u.deg,
                              wrap_angle=180*u.deg)
         self.lat = Latitude([+0., 30., 60., +90., -90., -60., -30., 0.], u.deg)
-        self.h = u.Quantity([0.1, 0.5, 1.0, -0.5, -1.0, +4.2, -11.,-.1], u.m)
+        self.h = u.Quantity([0.1, 0.5, 1.0, -0.5, -1.0, +4.2, -11., -.1], u.m)
         self.location = EarthLocation.from_geodetic(self.lon, self.lat, self.h)
         self.x, self.y, self.z = self.location.to_geocentric()
 

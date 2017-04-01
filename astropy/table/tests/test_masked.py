@@ -181,7 +181,7 @@ class TestTableInit(SetupData):
 
     def test_mask_false_if_no_input_masked(self):
         """Masking not true if not (requested or input requires mask)"""
-        t0 = Table([[3,4]], masked=False)
+        t0 = Table([[3, 4]], masked=False)
         t1 = Table(t0, masked=True)
         t2 = Table(t1, masked=False)
         assert not t0.masked
@@ -261,12 +261,12 @@ class TestRenameColumn(object):
 
     def test_rename_masked_column(self):
         t = Table(masked=True)
-        t.add_column(MaskedColumn(name='a', data=[1,2,3], mask=[0,1,0]))
+        t.add_column(MaskedColumn(name='a', data=[1, 2, 3], mask=[0, 1, 0]))
         t['a'].fill_value = 42
         t.rename_column('a', 'b')
         assert t.masked
-        assert np.all(t['b'] == np.array([1,2,3]))
-        assert np.all(t['b'].mask == np.array([0,1,0], bool))
+        assert np.all(t['b'] == np.array([1, 2, 3]))
+        assert np.all(t['b'].mask == np.array([0, 1, 0], bool))
         assert t['b'].fill_value == 42
         assert t.colnames == ['b']
 
@@ -274,13 +274,13 @@ class TestRemoveColumn(object):
 
     def test_remove_masked_column(self):
         t = Table(masked=True)
-        t.add_column(MaskedColumn(name='a', data=[1,2,3], mask=[0,1,0]))
+        t.add_column(MaskedColumn(name='a', data=[1, 2, 3], mask=[0, 1, 0]))
         t['a'].fill_value = 42
-        t.add_column(MaskedColumn(name='b', data=[4,5,6], mask=[1,0,1]))
+        t.add_column(MaskedColumn(name='b', data=[4, 5, 6], mask=[1, 0, 1]))
         t.remove_column('b')
         assert t.masked
-        assert np.all(t['a'] == np.array([1,2,3]))
-        assert np.all(t['a'].mask == np.array([0,1,0], bool))
+        assert np.all(t['a'] == np.array([1, 2, 3]))
+        assert np.all(t['a'].mask == np.array([0, 1, 0], bool))
         assert t['a'].fill_value == 42
         assert t.colnames == ['a']
 

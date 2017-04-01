@@ -10,11 +10,11 @@ from ..matrix_utilities import rotation_matrix, angle_axis
 def test_rotation_matrix():
     assert_array_equal(rotation_matrix(0*u.deg, 'x'), np.eye(3))
 
-    assert_allclose(rotation_matrix(90*u.deg, 'y'), [[ 0, 0,-1],
+    assert_allclose(rotation_matrix(90*u.deg, 'y'), [[ 0, 0, -1],
                                                      [ 0, 1, 0],
                                                      [ 1, 0, 0]], atol=1e-12)
 
-    assert_allclose(rotation_matrix(-90*u.deg, 'z'), [[ 0,-1, 0],
+    assert_allclose(rotation_matrix(-90*u.deg, 'z'), [[ 0, -1, 0],
                                                       [ 1, 0, 0],
                                                       [ 0, 0, 1]], atol=1e-12)
 

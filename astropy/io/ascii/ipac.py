@@ -492,7 +492,7 @@ class Ipac(basic.Basic):
                          "IPAC metadata must be in the form {{'keywords':"
                          "{{'keyword': {{'value': value}} }}".format(keyword),
                          AstropyUserWarning)
-        ignored_keys = [key for key in table.meta if key not in ('keywords','comments')]
+        ignored_keys = [key for key in table.meta if key not in ('keywords', 'comments')]
         if any(ignored_keys):
             warn("Table metadata keyword(s) {0} were not written.  "
                  "IPAC metadata must be in the form {{'keywords':"

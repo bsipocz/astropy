@@ -520,7 +520,7 @@ def test_write_no_multicols():
  </body>
 </html>
     """
-    assert html.HTML({'multicol':False}).write(table)[0].strip() == \
+    assert html.HTML({'multicol': False}).write(table)[0].strip() == \
                                                    expected.strip()
 
 @pytest.mark.skipif('not HAS_BEAUTIFUL_SOUP')

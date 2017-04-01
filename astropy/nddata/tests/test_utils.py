@@ -91,7 +91,7 @@ def test_extract_array_1d_even():
     '''
     assert np.all(extract_array(np.arange(4), (2, ), (0, ), fill_value=-99) == np.array([-99, 0]))
     for i in [1, 2, 3]:
-        assert np.all(extract_array(np.arange(4), (2, ), (i, )) == np.array([i -1 , i]))
+        assert np.all(extract_array(np.arange(4), (2, ), (i, )) == np.array([i -1, i]))
     assert np.all(extract_array(np.arange(4.), (2, ), (4, ), fill_value=np.inf) == np.array([3, np.inf]))
 
 
@@ -106,7 +106,7 @@ def test_extract_array_1d_odd():
     '''
     assert np.all(extract_array(np.arange(4), (3,), (-1, ), fill_value=-99) == np.array([-99, -99, 0]))
     assert np.all(extract_array(np.arange(4), (3,), (0, ), fill_value=-99) == np.array([-99, 0, 1]))
-    for i in [1,2]:
+    for i in [1, 2]:
         assert np.all(extract_array(np.arange(4), (3,), (i, )) == np.array([i-1, i, i+1]))
     assert np.all(extract_array(np.arange(4), (3,), (3, ), fill_value=-99) == np.array([2, 3, -99]))
     arrayin = np.arange(4.)
@@ -135,7 +135,7 @@ def test_extract_array_1d_trim():
     '''
     assert np.all(extract_array(np.arange(4), (2, ), (0, ), mode='trim') == np.array([0]))
     for i in [1, 2, 3]:
-        assert np.all(extract_array(np.arange(4), (2, ), (i, ), mode='trim') == np.array([i -1 , i]))
+        assert np.all(extract_array(np.arange(4), (2, ), (i, ), mode='trim') == np.array([i -1, i]))
     assert np.all(extract_array(np.arange(4.), (2, ), (4, ), mode='trim') == np.array([3]))
 
 
