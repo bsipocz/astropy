@@ -30,7 +30,6 @@ env:
         - SETUP_XVFB=True
         - EVENT_TYPE='push pull_request'
         - SETUP_CMD='test'
-        - DEBUG=True
 
     matrix:
         - PYTHON_VERSION=2.7 SETUP_CMD='egg_info'
