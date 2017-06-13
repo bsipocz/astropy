@@ -102,14 +102,6 @@ matrix:
           env: NUMPY_VERSION=dev SETUP_CMD='test --remote-data'
                CONDA_DEPENDENCIES=$CONDA_ALL_DEPENDENCIES
 
-        # Check for sphinx doc build warnings - we do this first because it
-        # runs for a long time. The sphinx build also has some additional
-        # dependencies.
-        - os: linux
-          env: SETUP_CMD='build_docs -w'
-               CONDA_DEPENDENCIES=$CONDA_ALL_DEPENDENCIES
-               PIP_DEPENDENCIES='sphinx-gallery>=0.1.9 pillow --no-deps jplephem'
-
 
         # We check numpy-dev also in a job that only runs from cron, so that
         # we can spot issues sooner. We do not use remote data here, since
