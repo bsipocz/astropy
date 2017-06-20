@@ -8,7 +8,7 @@ Ripley's K function is used to characterize spatial point processes.
 More precisely, it describes correlation in point fields.
 The `~astropy.stats.RipleysKEstimator` class implements some
 estimators for this function which provides several methods for
-edge-effects correction.
+edge-effects correction. [1]_ [2]_ [3]_ [4]_
 
 Basic Usage
 ===========
