@@ -11,6 +11,6 @@ except ImportError:
 else:
     matplotlib.use('Agg')
 
-enable_deprecations_as_exceptions(include_astropy_deprecations=False)
+enable_deprecations_as_exceptions(include_astropy_deprecations=True)
 
 PYTEST_HEADER_MODULES['Cython'] = 'cython'
