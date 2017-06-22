@@ -71,7 +71,7 @@ matrix:
         - os: linux
           env: SETUP_CMD='build_docs -w'
                CONDA_DEPENDENCIES=$CONDA_ALL_DEPENDENCIES
-               PIP_DEPENDENCIES='sphinx-gallery>=0.1.9 pillow --no-deps jplephem'
+               PIP_DEPENDENCIES='pillow --no-deps jplephem'
                SPHINX_VERSION='>1.6'
 
         # Try all python versions and Numpy versions. Since we can assume that
@@ -144,6 +144,10 @@ matrix:
 install:
     - git clone git://github.com/astropy/ci-helpers.git
     - source ci-helpers/travis/setup_conda.sh
+
+    # Use this until https://github.com/sphinx-gallery/sphinx-gallery/pull/255
+    # is merged.
+    - if [[ $SETUP_CMD == *build_docs* ]]; then pip -q install git+https://github.com/pllim/sphinx-gallery.git@stat-iter-deprec#egg=sphinx-gallery; fi
 
 script:
     - $MAIN_CMD $SETUP_CMD
