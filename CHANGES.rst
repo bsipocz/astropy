@@ -3003,6 +3003,9 @@ Other Changes and Additions
 
 1.0.13 (2017-05-29)
 ===================
+  - ``FLRW._tfunc`` and ``FLRW._xfunc`` are marked as deprecated.  Users
+    should use the new public interfaces ``FLRW.lookback_time_integrand``
+    and ``FLRW.abs_distance_integrand`` instead. [#3767]
 
 Bug Fixes
 ---------
@@ -3108,13 +3111,7 @@ astropy.io.fits
     minimum required version of wcslib remains 4.24.  The changes
     relevant to astropy are:
 
-  - The included version of wcslib has been upgraded to 5.6.
-
-    The minimum required version of wcslib in the 4.x series remains 4.24.
-
-    The minimum required version of wcslib in the 5.x series is 5.6.
-
-    When built with wcslib 5.x, the SIP polynomial distortion is now
+  - When built with wcslib 5.x, the SIP polynomial distortion is now
     performed by wcslib itself, and not code specific to astropy.
     Therefore, there may be small numerical differences in the
     results.
