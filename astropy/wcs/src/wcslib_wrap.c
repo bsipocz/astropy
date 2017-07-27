@@ -877,7 +877,7 @@ _do_dis(
   naxis = self->x.naxis;
 
   pixcrd = (PyArrayObject*)PyArray_ContiguousFromAny
-    (pixcrd_obj, PyArray_DOUBLE, 2, 2);
+    (pixcrd_obj, NPY_DOUBLE, 2, 2);
   if (pixcrd == NULL) {
     return NULL;
   }
@@ -891,7 +891,7 @@ _do_dis(
   }
 
   outcrd = (PyArrayObject*)PyArray_SimpleNew(
-      2, PyArray_DIMS(pixcrd), PyArray_DOUBLE);
+      2, PyArray_DIMS(pixcrd), NPY_DOUBLE);
   if (outcrd == NULL) {
     goto exit;
   }
