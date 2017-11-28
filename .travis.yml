@@ -1,7 +1,10 @@
 # We set the language to c because python isn't supported on the MacOS X nodes
 # on Travis. However, the language ends up being irrelevant anyway, since we
 # install Python ourselves using conda.
-language: c
+language: python
+
+python:
+    - "3.7.0a2"
 
 compiler: gcc
 
@@ -24,7 +27,6 @@ addons:
 env:
     global:
         # Set defaults to avoid repeating in most cases
-        - PYTHON_VERSION=3.6
         - NUMPY_VERSION=stable
         - MAIN_CMD='python setup.py'
         # Build against github source until asdf-2.0 has been released
@@ -66,19 +68,20 @@ matrix:
 
     include:
 
-        - stage: Initial tests
-          env: PYTHON_VERSION=3.5 SETUP_CMD='egg_info'
+        #- stage: Initial tests
+        #  python: "3.5"
+        #  env: SETUP_CMD='egg_info'
 
         - stage: Initial tests
-          env: PYTHON_VERSION=3.6 SETUP_CMD='egg_info'
+          env: SETUP_CMD='egg_info'
 
         # Try MacOS X. Use a slightly old numpy version to help test against
         # all supported numpy versions.
-        - os: osx
-          stage: Cron tests
-          env: SETUP_CMD='test --remote-data=astropy'
-               CONDA_DEPENDENCIES=$CONDA_ALL_DEPENDENCIES
-               PIP_DEPENDENCIES='jplephem' EVENT_TYPE='cron'
+        #- os: osx
+        #  stage: Cron tests
+        #  env: SETUP_CMD='test --remote-data=astropy'
+        #       CONDA_DEPENDENCIES=$CONDA_ALL_DEPENDENCIES
+        #       PIP_DEPENDENCIES='jplephem' EVENT_TYPE='cron'
 
         # Check for sphinx doc build warnings - we do this first because it
         # runs for a long time. The sphinx build also has some additional
@@ -97,7 +100,7 @@ matrix:
         # Numpy 1.11 is tested below in the image tests, 1.12 in the Initial stage test.
         # Run this test using native pytest
         - os: linux
-          env: PYTHON_VERSION=3.5 NUMPY_VERSION=1.10
+          env: NUMPY_VERSION=1.10
                INSTALL_CMD='python setup.py build_ext --inplace'
                PIP_DEPENDENCIES='pytest-astropy'
                TEST_CMD='pytest --open-files --doctest-rst'
@@ -108,7 +111,7 @@ matrix:
         # Now try with all optional dependencies.
         # We also test the two latest matplotlib versions for the image tests.
         - os: linux
-          env: PYTHON_VERSION=3.5 SETUP_CMD='test --remote-data=astropy -a "--mpl"'
+          env: SETUP_CMD='test --remote-data=astropy -a "--mpl"'
                CONDA_DEPENDENCIES=$CONDA_ALL_DEPENDENCIES
                PIP_DEPENDENCIES="jplephem pytest-mpl $ASDF_GIT"
                LC_CTYPE=C.ascii LC_ALL=C
