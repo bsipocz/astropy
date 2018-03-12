@@ -2810,7 +2810,7 @@ class _CompoundModelMeta(_ModelMeta):
 
         def evaluate_wrapper(model, inputs, param_values):
             inputs = model._validate_input_units(inputs)
-            outputs = model.evaluate(*inputs, *param_values)
+            outputs = model.evaluate(*(inputs + param_values))
             if n_outputs == 1:
                 outputs = (outputs,)
             return model._process_output_units(inputs, outputs)
