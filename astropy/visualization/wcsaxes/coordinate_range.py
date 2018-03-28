@@ -10,6 +10,8 @@ from ... import units as u
 
 # Algorithm inspired by PGSBOX from WCSLIB by M. Calabretta
 
+LONLAT = {'longitude', 'latitude'}
+
 
 def wrap_180(values):
     values_new = values % 360.
@@ -52,7 +54,7 @@ def find_coordinate_range(transform, extent, coord_types, coord_units):
 
         xw = world[:, coord_index].reshape(xp.shape)
 
-        if coord_type in ['longitude', 'latitude']:
+        if coord_type in LONLAT:
 
             unit = coord_units[coord_index]
             xw = xw * unit.to(u.deg)
@@ -82,7 +84,7 @@ def find_coordinate_range(transform, extent, coord_types, coord_units):
 
         # Check if range is smaller when normalizing to the range 0 to 360
 
-        if coord_type in ['longitude', 'latitude']:
+        if coord_type in LONLAT:
 
             with warnings.catch_warnings():
                 warnings.simplefilter("ignore", RuntimeWarning)
@@ -95,7 +97,7 @@ def find_coordinate_range(transform, extent, coord_types, coord_units):
 
         # Check if range is smaller when normalizing to the range -180 to 180
 
-        if coord_type in ['longitude', 'latitude']:
+        if coord_type in LONLAT:
 
             with warnings.catch_warnings():
                 warnings.simplefilter("ignore", RuntimeWarning)
@@ -120,6 +122,10 @@ def find_coordinate_range(transform, extent, coord_types, coord_units):
         elif coord_type == 'latitude':
             xw_min = max(-90., xw_min - 0.1 * x_range)
             xw_max = min(+90., xw_max + 0.1 * x_range)
+
+        if coord_type in LONLAT:
+            xw_min *= u.deg.to(unit)
+            xw_max *= u.deg.to(unit)
 
         ranges.append((xw_min, xw_max))
 
