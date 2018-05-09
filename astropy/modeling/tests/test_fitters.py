@@ -3,13 +3,12 @@
 Module to test fitting routines
 """
 
-
 import os.path
 
 import pytest
 import numpy as np
 from numpy import linalg
-from numpy.testing.utils import assert_allclose, assert_almost_equal
+from numpy.testing import assert_allclose, assert_almost_equal
 from unittest import mock
 
 from . import irafutil
@@ -183,8 +182,19 @@ class TestJointFitter:
                                     args=(self.x, self.ny1, self.x, self.ny2))
         assert_allclose(coeff, self.jf.fitparams, rtol=10 ** (-2))
 
-
 class TestLinearLSQFitter:
+    def test_compound_model_raises_error(self):
+        """Test that if an user tries to use a compound model, raises an error"""
+        with pytest.raises(ValueError) as excinfo:
+            init_model1 = models.Polynomial1D(degree=2, c0=[1, 1], n_models=2)
+            init_model2 = models.Polynomial1D(degree=2, c0=[1, 1], n_models=2)
+            init_model_comp = init_model1 + init_model2
+            x = np.arange(10)
+            y = init_model_comp(x, model_set_axis=False)
+            fitter = LinearLSQFitter()
+            fitted_model = fitter(init_model_comp, x, y)
+        assert "Model must be simple, not compound" in str(excinfo.value)
+
     def test_chebyshev1D(self):
         """Tests fitting a 1D Chebyshev polynomial to some real world data."""
 
@@ -694,6 +704,46 @@ class Test2DFittingWithOutlierRemoval:
                         atol=1e-1)
 
 
+def test_1d_set_fitting_with_outlier_removal():
+    """Test model set fitting with outlier removal (issue #6819)"""
+
+    poly_set = models.Polynomial1D(2, n_models=2)
+
+    fitter = FittingWithOutlierRemoval(LinearLSQFitter(),
+                                       sigma_clip, sigma=2.5, niter=3,
+                                       cenfunc=np.ma.mean, stdfunc=np.ma.std)
+
+    x = np.arange(10)
+    y = np.array([2.5*x - 4, 2*x*x + x + 10])
+    y[1,5] = -1000  # outlier
+
+    filt_y, poly_set = fitter(poly_set, x, y)
+
+    assert_allclose(poly_set.c0, [-4., 10.], atol=1e-14)
+    assert_allclose(poly_set.c1, [2.5, 1.], atol=1e-14)
+    assert_allclose(poly_set.c2, [0., 2.], atol=1e-14)
+
+
+def test_2d_set_axis_2_fitting_with_outlier_removal():
+    """Test fitting 2D model set (axis 2) with outlier removal (issue #6819)"""
+
+    poly_set = models.Polynomial2D(1, n_models=2, model_set_axis=2)
+
+    fitter = FittingWithOutlierRemoval(LinearLSQFitter(),
+                                       sigma_clip, sigma=2.5, niter=3,
+                                       cenfunc=np.ma.mean, stdfunc=np.ma.std)
+
+    y, x = np.mgrid[0:5, 0:5]
+    z = np.rollaxis(np.array([x+y, 1-0.1*x+0.2*y]), 0, 3)
+    z[3,3:5,0] = 100.   # outliers
+
+    filt_z, poly_set = fitter(poly_set, x, y, z)
+
+    assert_allclose(poly_set.c0_0, [[[0., 1.]]], atol=1e-14)
+    assert_allclose(poly_set.c1_0, [[[1., -0.1]]], atol=1e-14)
+    assert_allclose(poly_set.c0_1, [[[1., 0.2]]], atol=1e-14)
+
+
 @pytest.mark.skipif('not HAS_SCIPY')
 class TestWeightedFittingWithOutlierRemoval:
     """Issue #7020 """
@@ -738,6 +788,16 @@ class TestWeightedFittingWithOutlierRemoval:
         filtered, fit = fitter(model, self.x1d, self.z1d, weights=self.weights1d)
         assert(fit.parameters[0] > 10**(-2))  # weights pulled it > 0
         assert(fit.parameters[0] < 1.0)       # outliers didn't pull it out of [-1:1] because they had been removed
+
+    def test_1d_set_with_common_weights_with_sigma_clip(self):
+        """added for #6819 (1D model set with weights in common)"""
+        model = models.Polynomial1D(0, n_models=2)
+        fitter = FittingWithOutlierRemoval(LinearLSQFitter(), sigma_clip,
+                                           niter=3, sigma=3.)
+        z1d = np.array([self.z1d, self.z1d])
+
+        filtered, fit = fitter(model, self.x1d, z1d, weights=self.weights1d)
+        assert_allclose(fit.parameters, [0.8, 0.8], atol=1e-14)
 
     def test_2d_without_weights_without_sigma_clip(self):
         model = models.Polynomial2D(0)

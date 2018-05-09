@@ -3,14 +3,12 @@
 This module provides the tools used to internally run the astropy test suite
 from the installed astropy.  It makes use of the `pytest` testing framework.
 """
-
 import os
 import sys
 import types
 import pickle
 import warnings
 import functools
-
 import pytest
 
 try:
@@ -21,6 +19,7 @@ try:
 except ImportError:
     pass
 
+from ..units import allclose as quantity_allclose  # noqa
 from ..utils.exceptions import (AstropyDeprecationWarning,
                                 AstropyPendingDeprecationWarning)
 
@@ -30,7 +29,7 @@ from .runner import TestRunner  # pylint: disable=W0611
 
 __all__ = ['raises', 'enable_deprecations_as_exceptions', 'remote_data',
            'treat_deprecations_as_exceptions', 'catch_warnings',
-           'assert_follows_unicode_guidelines', 'quantity_allclose',
+           'assert_follows_unicode_guidelines',
            'assert_quantity_allclose', 'check_pickling_recovery',
            'pickle_protocol', 'generic_recursive_equality_test']
 
@@ -142,7 +141,9 @@ _warnings_to_ignore_by_pyver = {
         # See https://github.com/pytest-dev/pytest/pull/1009
         # Keeping it since e.g. lxml as of 3.8.0 is still calling getargspec()
         r"inspect\.getargspec\(\) is deprecated, use "
-        r"inspect\.signature\(\) instead"]),
+        r"inspect\.signature\(\) instead",
+        # https://github.com/astropy/astropy/pull/7372
+        r"Importing from numpy\.testing\.decorators is deprecated, import from numpy\.testing instead\."]),
     (3, 6): set([
         # py.test reads files with the 'U' flag, which is
         # deprecated.
@@ -150,7 +151,9 @@ _warnings_to_ignore_by_pyver = {
         # inspect raises this slightly different warning on Python 3.6.
         # Keeping it since e.g. lxml as of 3.8.0 is still calling getargspec()
         r"inspect\.getargspec\(\) is deprecated, use "
-        r"inspect\.signature\(\) or inspect\.getfullargspec\(\)"])}
+        r"inspect\.signature\(\) or inspect\.getfullargspec\(\)",
+        # https://github.com/astropy/astropy/pull/7372
+        r"Importing from numpy\.testing\.decorators is deprecated, import from numpy\.testing instead\."])}
 
 
 def enable_deprecations_as_exceptions(include_astropy_deprecations=True,
@@ -461,52 +464,6 @@ def assert_quantity_allclose(actual, desired, rtol=1.e-7, atol=None,
     :func:`numpy.testing.assert_allclose`.
     """
     import numpy as np
-    np.testing.assert_allclose(*_unquantify_allclose_arguments(actual, desired,
-                                                               rtol, atol),
-                               **kwargs)
-
-
-def quantity_allclose(a, b, rtol=1.e-5, atol=None, **kwargs):
-    """
-    Returns True if two arrays are element-wise equal within a tolerance.
-
-    This is a :class:`~astropy.units.Quantity`-aware version of
-    :func:`numpy.allclose`.
-    """
-    import numpy as np
-    return np.allclose(*_unquantify_allclose_arguments(a, b, rtol, atol),
-                       **kwargs)
-
-
-def _unquantify_allclose_arguments(actual, desired, rtol, atol):
-    from .. import units as u
-
-    actual = u.Quantity(actual, subok=True, copy=False)
-
-    desired = u.Quantity(desired, subok=True, copy=False)
-    try:
-        desired = desired.to(actual.unit)
-    except u.UnitsError:
-        raise u.UnitsError("Units for 'desired' ({0}) and 'actual' ({1}) "
-                           "are not convertible"
-                           .format(desired.unit, actual.unit))
-
-    if atol is None:
-        # by default, we assume an absolute tolerance of 0
-        atol = u.Quantity(0)
-    else:
-        atol = u.Quantity(atol, subok=True, copy=False)
-        try:
-            atol = atol.to(actual.unit)
-        except u.UnitsError:
-            raise u.UnitsError("Units for 'atol' ({0}) and 'actual' ({1}) "
-                               "are not convertible"
-                               .format(atol.unit, actual.unit))
-
-    rtol = u.Quantity(rtol, subok=True, copy=False)
-    try:
-        rtol = rtol.to(u.dimensionless_unscaled)
-    except Exception:
-        raise u.UnitsError("`rtol` should be dimensionless")
-
-    return actual.value, desired.value, rtol.value, atol.value
+    from ..units.quantity import _unquantify_allclose_arguments
+    np.testing.assert_allclose(*_unquantify_allclose_arguments(
+        actual, desired, rtol, atol), **kwargs)

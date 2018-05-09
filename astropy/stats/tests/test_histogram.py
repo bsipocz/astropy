@@ -1,6 +1,5 @@
 # Licensed under a 3-clause BSD style license - see LICENSE.rst
 
-
 import pytest
 import numpy as np
 from numpy.testing import assert_allclose
@@ -43,6 +42,18 @@ def test_freedman_bin_width(N=10000, rseed=0):
 
     with pytest.raises(ValueError):
         freedman_bin_width(rng.rand(2, 10))
+
+    # data with too small IQR
+    test_x = [1, 2, 3] + [4] * 100 + [5, 6, 7]
+    with pytest.raises(ValueError) as e:
+        freedman_bin_width(test_x, return_bins=True)
+        assert 'Please use another bin method' in str(e)
+
+    # data with small IQR but not too small
+    test_x = np.asarray([1, 2, 3] * 100 + [4] + [5, 6, 7], dtype=np.float32)
+    test_x *= 1.5e-6
+    delta, bins = freedman_bin_width(test_x, return_bins=True)
+    assert_allclose(delta, 8.923325554510689e-07)
 
 
 @pytest.mark.skipif('not HAS_SCIPY')

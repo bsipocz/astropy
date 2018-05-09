@@ -207,7 +207,17 @@ def freedman_bin_width(data, return_bins=False):
     if return_bins:
         dmin, dmax = data.min(), data.max()
         Nbins = max(1, np.ceil((dmax - dmin) / dx))
-        bins = dmin + dx * np.arange(Nbins + 1)
+        try:
+            bins = dmin + dx * np.arange(Nbins + 1)
+        except ValueError as e:
+            if 'Maximum allowed size exceeded' in str(e):
+                raise ValueError(
+                    'The inter-quartile range of the data is too small: '
+                    'failed to construct histogram with {} bins. '
+                    'Please use another bin method, such as '
+                    'bins="scott"'.format(Nbins + 1))
+            else:  # Something else  # pragma: no cover
+                raise
         return dx, bins
     else:
         return dx

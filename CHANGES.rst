@@ -19,12 +19,13 @@ astropy.coordinates
 astropy.cosmology
 ^^^^^^^^^^^^^^^^^
 
-Distance calculations with ``FlatLambaCDM`` with no radiation (T_CMB0=0)
-are now 20x faster by using the hypergeometric function solution
-for this special case.  [#7087]
+- Distance calculations with ``FlatLambaCDM`` with no radiation (T_CMB0=0)
+  are now 20x faster by using the hypergeometric function solution
+  for this special case. [#7087]
 
-Age calculations with ``FlatLambdaCDM`` with no radiation (Tcmb0=0)
-are now 1000x faster by using analytic solutions instead of integrating. [#7117]
+- Age calculations with ``FlatLambdaCDM`` with no radiation (Tcmb0=0)
+  are now 1000x faster by using analytic solutions instead of integrating.
+  [#7117]
 
 astropy.extern
 ^^^^^^^^^^^^^^
@@ -40,10 +41,16 @@ astropy.io.ascii
   All guesses thus removed from ``filtered_guess_kwargs`` are now listed as
   "Disabled" at the beginning of the trace. [#5578]
 
+- Latex reader now ignores ``\toprule``, ``\midrule``, and ``\bottomrule``
+  commands [#7349]
+
 astropy.io.misc
 ^^^^^^^^^^^^^^^
 
-Added support for saving all representation classes and many coordinate frames to the asdf format. [#7079]
+- Added support for saving all representation classes and many coordinate
+  frames to the asdf format. [#7079]
+
+- Added support for saving models with units to the asdf format. [#7237]
 
 astropy.io.fits
 ^^^^^^^^^^^^^^^
@@ -60,6 +67,9 @@ astropy.io.votable
 astropy.modeling
 ^^^^^^^^^^^^^^^^
 
+- Add a ``Multiply`` model which preseves unit through evaluate, unlike
+  ``Scale`` which is dimensionless. [#7210]
+
 astropy.nddata
 ^^^^^^^^^^^^^^
 
@@ -72,6 +82,9 @@ astropy.stats
 astropy.table
 ^^^^^^^^^^^^^
 
+- Added support for full use of ``Time`` mixin column for join, hstack, and
+  vstack table operations. [#6888]
+
 astropy.tests
 ^^^^^^^^^^^^^
 
@@ -81,6 +94,9 @@ astropy.time
 - Allow array-valued ``Time`` object to be modified in place. [#6028]
 
 - Added support for missing values (masking) to the ``Time`` class. [#6028]
+
+- Added supper for a 'local' time scale (for free-running clocks, etc.),
+  and round-tripping to the corresponding FITS time scale. [#7122]
 
 astropy.units
 ^^^^^^^^^^^^^
@@ -168,8 +184,15 @@ astropy.table
 astropy.tests
 ^^^^^^^^^^^^^
 
+- ``from astropy.tests.helper import *`` no longer includes
+  ``quantity_allclose``. However,
+  ``from astropy.tests.helper import quantity_allclose`` would still work.
+  [#7381]
+
 astropy.time
 ^^^^^^^^^^^^
+- Added the ability to use ``local`` as time scale in ``Time`` and
+  ``TimeDelta``. [#6487]
 
 astropy.units
 ^^^^^^^^^^^^^
@@ -235,6 +258,9 @@ astropy.io.votable
 astropy.modeling
 ^^^^^^^^^^^^^^^^
 
+- Fix behaviour of certain models with units, by making certain unit-related
+  attributes readonly. [#7210]
+
 astropy.nddata
 ^^^^^^^^^^^^^^
 
@@ -262,16 +288,21 @@ astropy.utils
 astropy.visualization
 ^^^^^^^^^^^^^^^^^^^^^
 
+- Right ascension coordinates are now shown in hours by default, and the
+  ``set_format_unit`` method on ``CoordinateHelper`` now works correctly
+  with angle coordinates. [#7215]
+
 astropy.wcs
 ^^^^^^^^^^^
 
 Other Changes and Additions
 ---------------------------
 
-- Nothing changed yet.
+- The documentation build now uses the Sphinx configuration from sphinx-astropy
+  rather than from astropy-helpers. [#7139]
 
 
-3.0.2 (unreleased)
+3.0.3 (unreleased)
 ==================
 
 Bug Fixes
@@ -310,8 +341,6 @@ astropy.io.registry
 astropy.io.votable
 ^^^^^^^^^^^^^^^^^^
 
-- Fix validate with xmllint=True. [#7255, #7283]
-
 astropy.modeling
 ^^^^^^^^^^^^^^^^
 
@@ -344,6 +373,63 @@ astropy.visualization
 
 astropy.wcs
 ^^^^^^^^^^^
+
+
+Other Changes and Additions
+---------------------------
+
+
+
+3.0.2 (2018-04-23)
+==================
+
+Bug Fixes
+---------
+
+astropy.coordinates
+^^^^^^^^^^^^^^^^^^^
+
+- Computing a 3D separation between two ``SkyCoord`` objects (with the
+  ``separation_3d`` method) now works with or without velocity data attached to
+  the objects. [#7387]
+
+astropy.io.votable
+^^^^^^^^^^^^^^^^^^
+
+- Fix validate with xmllint=True. [#7255, #7283]
+
+astropy.modeling
+^^^^^^^^^^^^^^^^
+
+- ``FittingWithOutlierRemoval`` now handles model sets, as long as the
+  underlying fitter supports masked values. [#7199]
+
+- Remove assumption that ``model_set_axis == 0`` for 2D models in
+  ``LinearLSQFitter``. [#7317, #7199]
+
+- Fix the shape of the outputs when a model set is evaluated with
+  ``model_set_axis=False`` . [#7317]
+
+astropy.stats
+^^^^^^^^^^^^^
+
+- Accept a tuple for the ``axis`` parameter in ``sigma_clip``, like the
+  underlying ``numpy`` functions and some other functions in ``stats``. [#7199]
+
+astropy.tests
+^^^^^^^^^^^^^
+
+- The function ``quantity_allclose`` was moved to the ``units`` package with
+  the new, shorter name ``allclose``. This eliminates a runtime dependency on
+  ``pytest`` which was causing issues for some affiliated packages. The old
+  import will continue to work but may be deprecated in the future. [#7252]
+
+astropy.units
+^^^^^^^^^^^^^
+
+- Added a units-aware ``allclose`` function (this was previously available in
+  the ``tests`` module as ``quantity_allclose``). To complement ``allclose``,
+  a new ``isclose`` function is also added and backported. [#7252]
 
 
 3.0.1 (2018-03-12)
@@ -850,7 +936,7 @@ Other Changes and Additions
 - The bundled version of PLY was updated to 3.10. [#7174]
 
 
-2.0.6 (unreleased)
+2.0.7 (unreleased)
 ==================
 
 Bug Fixes
@@ -892,6 +978,8 @@ astropy.io.votable
 astropy.modeling
 ^^^^^^^^^^^^^^^^
 
+- Fixed ``Tabular`` models to not change the shape of data. [#7411]
+
 astropy.nddata
 ^^^^^^^^^^^^^^
 
@@ -901,8 +989,14 @@ astropy.samp
 astropy.stats
 ^^^^^^^^^^^^^
 
+- In ``freedman_bin_width``, if the data has too small IQR,
+  raise ``ValueError``. [#7248, #7402]
+
 astropy.table
 ^^^^^^^^^^^^^
+
+- Fix a performance issue in ``MaskedColumn`` where initialization was
+  extremely slow for large arrays with the default ``mask=None``. [#7422]
 
 astropy.tests
 ^^^^^^^^^^^^^
@@ -919,11 +1013,56 @@ astropy.utils
 astropy.visualization
 ^^^^^^^^^^^^^^^^^^^^^
 
+- Fixed a bug that caused the position of the tick values in decimal mode
+  to be incorrectly determined. [#7332]
+
 astropy.vo
 ^^^^^^^^^^
 
 astropy.wcs
 ^^^^^^^^^^^
+
+
+Other Changes and Additions
+---------------------------
+
+
+
+2.0.6 (2018-04-23)
+==================
+
+Bug Fixes
+---------
+
+astropy.convolution
+^^^^^^^^^^^^^^^^^^^
+
+- convolve(boundary=None) requires the kernel to be smaller than the image.
+  This was never actually checked, it now is and an exception is raised.
+  [#7313]
+
+astropy.units
+^^^^^^^^^^^^^
+
+- ``u.quantity_input`` no longer errors if the return annotation for a
+  function is ``None``. [#7336, #7380]
+
+astropy.visualization
+^^^^^^^^^^^^^^^^^^^^^
+
+- Explicilty default to origin='lower' in WCSAxes. [#7331]
+
+- Lists of units are now converted in the Matplotlib unit converter. This means
+  that for Matplotlib versions later than 2.2, more plotting functions now work
+  with units (e.g. errorbar). [#7037]
+
+
+Other Changes and Additions
+---------------------------
+
+- Updated the bundled CFITSIO library to 3.44. This is to remedy another
+  critical security vulnerability that was identified by NASA. See
+  ``cextern/cfitsio/docs/changes.txt`` for additional information. [#7370]
 
 
 2.0.5 (2018-03-12)

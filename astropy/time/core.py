@@ -29,11 +29,14 @@ from .formats import (TIME_FORMATS, TIME_DELTA_FORMATS,
 from .formats import TimeFromEpoch  # pylint: disable=W0611
 
 
-__all__ = ['Time', 'TimeDelta', 'TIME_SCALES', 'TIME_DELTA_SCALES',
+__all__ = ['Time', 'TimeDelta', 'TIME_SCALES', 'STANDARD_TIME_SCALES', 'TIME_DELTA_SCALES',
            'ScaleValueError', 'OperandTypeError', 'TimeInfo']
 
 
-TIME_SCALES = ('tai', 'tcb', 'tcg', 'tdb', 'tt', 'ut1', 'utc')
+STANDARD_TIME_SCALES = ('tai', 'tcb', 'tcg', 'tdb', 'tt', 'ut1', 'utc')
+LOCAL_SCALES = ('local',)
+TIME_TYPES = dict((scale, scales) for scales in (STANDARD_TIME_SCALES, LOCAL_SCALES) for scale in scales)
+TIME_SCALES = STANDARD_TIME_SCALES + LOCAL_SCALES
 MULTI_HOPS = {('tai', 'tcb'): ('tt', 'tdb'),
               ('tai', 'tcg'): ('tt',),
               ('tai', 'ut1'): ('utc',),
@@ -55,8 +58,8 @@ BARYCENTRIC_SCALES = ('tcb', 'tdb')
 ROTATIONAL_SCALES = ('ut1',)
 TIME_DELTA_TYPES = dict((scale, scales)
                         for scales in (GEOCENTRIC_SCALES, BARYCENTRIC_SCALES,
-                                       ROTATIONAL_SCALES) for scale in scales)
-TIME_DELTA_SCALES = TIME_DELTA_TYPES.keys()
+                                       ROTATIONAL_SCALES, LOCAL_SCALES) for scale in scales)
+TIME_DELTA_SCALES = GEOCENTRIC_SCALES + BARYCENTRIC_SCALES + ROTATIONAL_SCALES + LOCAL_SCALES
 # For time scale changes, we need L_G and L_B, which are stored in erfam.h as
 #   /* L_G = 1 - d(TT)/d(TCG) */
 #   define ERFA_ELG (6.969290134e-10)
@@ -169,6 +172,67 @@ class TimeInfo(MixinInfo):
 
         return out
 
+    def new_like(self, cols, length, metadata_conflicts='warn', name=None):
+        """
+        Return a new Time instance which is consistent with the input Time objects
+        ``cols`` and has ``length`` rows.
+
+        This is intended for creating an empty Time instance whose elements can
+        be set in-place for table operations like join or vstack.  It checks
+        that the input locations and attributes are consistent.  This is used
+        when a Time object is used as a mixin column in an astropy Table.
+
+        Parameters
+        ----------
+        cols : list
+            List of input columns (Time objects)
+        length : int
+            Length of the output column object
+        metadata_conflicts : str ('warn'|'error'|'silent')
+            How to handle metadata conflicts
+        name : str
+            Output column name
+
+        Returns
+        -------
+        col : Time (or subclass)
+            Empty instance of this class consistent with ``cols``
+
+        """
+        # Get merged info attributes like shape, dtype, format, description, etc.
+        attrs = self.merge_cols_attributes(cols, metadata_conflicts, name,
+                                           ('meta', 'description'))
+        attrs.pop('dtype')  # Not relevant for Time
+        col0 = cols[0]
+
+        # Check that location is consistent for all Time objects
+        for col in cols[1:]:
+            # This is the method used by __setitem__ to ensure that the right side
+            # has a consistent location (and coerce data if necessary, but that does
+            # not happen in this case since `col` is already a Time object).  If this
+            # passes then any subsequent table operations via setitem will work.
+            try:
+                col0._make_value_equivalent(slice(None), col)
+            except ValueError:
+                raise ValueError('input columns have inconsistent locations')
+
+        # Make a new Time object with the desired shape and attributes
+        shape = (length,) + attrs.pop('shape')
+        jd2000 = 2451544.5  # Arbitrary JD value J2000.0 that will work with ERFA
+        jd1 = np.full(shape, jd2000, dtype='f8')
+        jd2 = np.zeros(shape, dtype='f8')
+        tm_attrs = {attr: getattr(col0, attr)
+                    for attr in ('scale', 'location',
+                                 'precision', 'in_subfmt', 'out_subfmt')}
+        out = self._parent_cls(jd1, jd2, format='jd', **tm_attrs)
+        out.format = col0.format
+
+        # Set remaining info attributes
+        for attr, value in attrs.items():
+            setattr(out.info, attr, value)
+
+        return out
+
 
 class TimeDeltaInfo(TimeInfo):
     _represent_as_dict_extra_attrs = ('format', 'scale')
@@ -272,12 +336,13 @@ class Time(ShapedLikeNDArray):
                 self._time.in_subfmt = in_subfmt
             if out_subfmt is not None:
                 self._time.out_subfmt = out_subfmt
-
+            self.SCALES = TIME_TYPES[self.scale]
             if scale is not None:
                 self._set_scale(scale)
         else:
             self._init_from_vals(val, val2, format, scale, copy,
                                  precision, in_subfmt, out_subfmt)
+            self.SCALES = TIME_TYPES[self.scale]
 
         if self.location is not None and (self.location.size > 1 and
                                           self.location.shape != self.shape):
@@ -1037,7 +1102,7 @@ class Time(ShapedLikeNDArray):
                              tm.in_subfmt, tm.out_subfmt,
                              from_jd=True)
         tm._format = new_format
-
+        tm.SCALES = self.SCALES
         return tm
 
     def __copy__(self):
@@ -1476,14 +1541,25 @@ class Time(ShapedLikeNDArray):
                 if other.scale not in (out.scale, None):
                     other = getattr(other, out.scale)
             else:
-                out._set_scale(other.scale if other.scale is not None
-                               else 'tai')
+                if other.scale is None:
+                    out._set_scale('tai')
+                else:
+                    if self.scale not in TIME_TYPES[other.scale]:
+                        raise TypeError("Cannot subtract Time and TimeDelta instances "
+                                        "with scales '{0}' and '{1}'"
+                                        .format(self.scale, other.scale))
+                    out._set_scale(other.scale)
             # remove attributes that are invalidated by changing time
             for attr in ('_delta_ut1_utc', '_delta_tdb_tt'):
                 if hasattr(out, attr):
                     delattr(out, attr)
 
         else:  # T - T
+            # the scales should be compatible (e.g., cannot convert TDB to LOCAL)
+            if other.scale not in self.SCALES:
+                raise TypeError("Cannot subtract Time instances "
+                                "with scales '{0}' and '{1}'"
+                                .format(self.scale, other.scale))
             self_time = (self._time if self.scale in TIME_DELTA_SCALES
                          else self.tai._time)
             # set up TimeDelta, subtraction to be done shortly
@@ -1526,8 +1602,14 @@ class Time(ShapedLikeNDArray):
             if other.scale not in (out.scale, None):
                 other = getattr(other, out.scale)
         else:
-            out._set_scale(other.scale if other.scale is not None else 'tai')
-
+            if other.scale is None:
+                    out._set_scale('tai')
+            else:
+                if self.scale not in TIME_TYPES[other.scale]:
+                    raise TypeError("Cannot add Time and TimeDelta instances "
+                                    "with scales '{0}' and '{1}'"
+                                    .format(self.scale, other.scale))
+                out._set_scale(other.scale)
         # remove attributes that are invalidated by changing time
         for attr in ('_delta_ut1_utc', '_delta_tdb_tt'):
             if hasattr(out, attr):

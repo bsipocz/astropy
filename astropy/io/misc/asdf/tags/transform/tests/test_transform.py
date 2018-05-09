@@ -4,19 +4,25 @@
 import pytest
 import numpy as np
 
-asdf = pytest.importorskip('asdf', minversion='2.0.0')
+asdf = pytest.importorskip('asdf', minversion='2.0.0.dev0')
 from asdf import util
 from asdf.tests import helpers
 
+import astropy.units as u
 from astropy.modeling import models as astmodels
 
 test_models = [
     astmodels.Identity(2), astmodels.Polynomial1D(2, c0=1, c1=2, c2=3),
     astmodels.Polynomial2D(1, c0_0=1, c0_1=2, c1_0=3), astmodels.Shift(2.),
     astmodels.Scale(3.4), astmodels.RotateNative2Celestial(5.63, -72.5, 180),
+    astmodels.Multiply(3), astmodels.Multiply(10*u.m),
     astmodels.RotateCelestial2Native(5.63, -72.5, 180),
     astmodels.EulerAngleRotation(23, 14, 2.3, axes_order='xzx'),
-    astmodels.Mapping((0, 1), n_inputs=3)
+    astmodels.Mapping((0, 1), n_inputs=3),
+    astmodels.Shift(2.*u.deg),
+    astmodels.Scale(3.4*u.deg),
+    astmodels.RotateNative2Celestial(5.63*u.deg, -72.5*u.deg, 180*u.deg),
+    astmodels.RotateCelestial2Native(5.63*u.deg, -72.5*u.deg, 180*u.deg),
 ]
 
 
@@ -89,7 +95,7 @@ def test_naming_of_compound_model(tmpdir):
 def test_generic_projections(tmpdir):
     from astropy.io.misc.asdf.tags.transform import projections
 
-    for tag_name, (name, params) in projections._generic_projections.items():
+    for tag_name, (name, params, version) in projections._generic_projections.items():
         tree = {
             'forward': util.resolve_name(
                 'astropy.modeling.projections.Sky2Pix_{0}'.format(name))(),
@@ -119,5 +125,17 @@ def test_tabular_model(tmpdir):
 def test_bounding_box(tmpdir):
     model = astmodels.Shift(1) & astmodels.Shift(2)
     model.bounding_box = ((1, 3), (2, 4))
+    tree = {'model': model}
+    helpers.assert_roundtrip_tree(tree, tmpdir)
+
+
+def test_linear1d(tmpdir):
+    model = astmodels.Linear1D()
+    tree = {'model': model}
+    helpers.assert_roundtrip_tree(tree, tmpdir)
+
+
+def test_linear1d_quantity(tmpdir):
+    model = astmodels.Linear1D(1*u.nm, 1*(u.nm/u.pixel))
     tree = {'model': model}
     helpers.assert_roundtrip_tree(tree, tmpdir)

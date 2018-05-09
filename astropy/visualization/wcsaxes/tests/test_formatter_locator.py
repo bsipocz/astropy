@@ -7,6 +7,8 @@ from numpy.testing import assert_almost_equal
 from matplotlib import rc_context
 
 from .... import units as u
+from ....tests.helper import assert_quantity_allclose
+from ....units import UnitsError
 from ..formatter_locator import AngleFormatterLocator, ScalarFormatterLocator
 
 
@@ -133,7 +135,7 @@ class TestAngleFormatterLocator:
                                                     ])
     def test_format(self, format, string):
         fl = AngleFormatterLocator(number=5, format=format)
-        assert fl.formatter([15.392231] * u.degree, None)[0] == string
+        assert fl.formatter([15.392231] * u.degree, None, format='ascii')[0] == string
 
     @pytest.mark.parametrize(('separator', 'format', 'string'), [(('deg', "'", '"'), 'dd', '15deg'),
                                                                  (('deg', "'", '"'), 'dd:mm', '15deg24\''),
@@ -154,7 +156,7 @@ class TestAngleFormatterLocator:
         fl = AngleFormatterLocator(number=5, format="dd:mm:ss")
         assert fl.formatter([15.392231] * u.degree, None)[0] == '15\xb023\'32"'
         with rc_context(rc={'text.usetex': True}):
-            assert fl.formatter([15.392231] * u.degree, None)[0] == "15$^\\circ$23'32\""
+            assert fl.formatter([15.392231] * u.degree, None)[0] == "$15^\\circ23{}^\\prime32{}^{\\prime\\prime}$"
 
     @pytest.mark.parametrize(('format'), ['x.xxx', 'dd.ss', 'dd:ss', 'mdd:mm:ss'])
     def test_invalid_formats(self, format):
@@ -192,6 +194,44 @@ class TestAngleFormatterLocator:
         fl.format = 'dd:mm:ss'
         assert_almost_equal(fl.spacing.to_value(u.arcsec), 115.)
 
+    def test_decimal_values(self):
+
+        # Regression test for a bug that meant that the spacing was not
+        # determined correctly for decimal coordinates
+
+        fl = AngleFormatterLocator()
+        fl.format = 'd.dddd'
+        assert_quantity_allclose(fl.locator(266.9730, 266.9750)[0],
+                                 [266.9735, 266.9740, 266.9745, 266.9750] * u.deg)
+
+        fl = AngleFormatterLocator(decimal=True, format_unit=u.hourangle, number=4)
+        assert_quantity_allclose(fl.locator(266.9730, 266.9750)[0],
+                                 [17.79825, 17.79830] * u.hourangle)
+
+    def test_values_unit(self):
+
+        # Make sure that the intrinsic unit and format unit are correctly
+        # taken into account when using the locator
+
+        fl = AngleFormatterLocator(unit=u.arcsec, format_unit=u.arcsec, decimal=True)
+        assert_quantity_allclose(fl.locator(850, 2150)[0],
+                                 [1000., 1200., 1400., 1600., 1800., 2000.] * u.arcsec)
+
+        fl = AngleFormatterLocator(unit=u.arcsec, format_unit=u.degree, decimal=False)
+        assert_quantity_allclose(fl.locator(850, 2150)[0],
+                                 [15., 20., 25., 30., 35.] * u.arcmin)
+
+        fl = AngleFormatterLocator(unit=u.arcsec, format_unit=u.hourangle, decimal=False)
+        assert_quantity_allclose(fl.locator(850, 2150)[0],
+                                 [60., 75., 90., 105., 120., 135.] * (15 * u.arcsec))
+
+        fl = AngleFormatterLocator(unit=u.arcsec)
+        fl.format = 'dd:mm:ss'
+        assert_quantity_allclose(fl.locator(0.9, 1.1)[0], [1] * u.arcsec)
+
+        fl = AngleFormatterLocator(unit=u.arcsec, spacing=0.2 * u.arcsec)
+        assert_quantity_allclose(fl.locator(0.3, 0.9)[0], [0.4, 0.6, 0.8] * u.arcsec)
+
     @pytest.mark.parametrize(('spacing', 'string'), [(2 * u.deg, '15\xb0'),
                                                      (2 * u.arcmin, '15\xb024\''),
                                                      (2 * u.arcsec, '15\xb023\'32"'),
@@ -199,6 +239,36 @@ class TestAngleFormatterLocator:
     def test_formatter_no_format(self, spacing, string):
         fl = AngleFormatterLocator()
         assert fl.formatter([15.392231] * u.degree, spacing)[0] == string
+
+    @pytest.mark.parametrize(('format_unit', 'decimal', 'spacing', 'string'),
+                             [(u.degree, False, 2 * u.degree, '15\xb0'),
+                              (u.degree, False, 2 * u.arcmin, '15\xb024\''),
+                              (u.degree, False, 2 * u.arcsec, '15\xb023\'32"'),
+                              (u.degree, False, 0.1 * u.arcsec, '15\xb023\'32.0"'),
+                              (u.hourangle, False, 15 * u.degree, '1h'),
+                              (u.hourangle, False, 15 * u.arcmin, '1h02m'),
+                              (u.hourangle, False, 15 * u.arcsec, '1h01m34s'),
+                              (u.hourangle, False, 1.5 * u.arcsec, '1h01m34.1s'),
+                              (u.degree, True, 15 * u.degree, '15'),
+                              (u.degree, True, 0.12 * u.degree, '15.39'),
+                              (u.degree, True, 0.0036 * u.arcsec, '15.392231'),
+                              (u.arcmin, True, 15 * u.degree, '924'),
+                              (u.arcmin, True, 0.12 * u.degree, '923.5'),
+                              (u.arcmin, True, 0.1 * u.arcmin, '923.5'),
+                              (u.arcmin, True, 0.0002 * u.arcmin, '923.5339'),
+                              # Make sure that specifying None defaults to
+                              # decimal for non-degree or non-hour angles
+                              (u.arcsec, None, 0.01 * u.arcsec, '55412.03')])
+    def test_formatter_no_format_with_units(self, format_unit, decimal, spacing, string):
+        # Check the formatter works when specifying the default units and
+        # decimal behavior to use.
+        fl = AngleFormatterLocator(unit=u.degree, format_unit=format_unit, decimal=decimal)
+        assert fl.formatter([15.392231] * u.degree, spacing, format='ascii')[0] == string
+
+    def test_incompatible_unit_decimal(self):
+        with pytest.raises(UnitsError) as exc:
+            AngleFormatterLocator(unit=u.arcmin, decimal=False)
+        assert exc.value.args[0] == 'Units should be degrees or hours when using non-decimal (sexagesimal) mode'
 
 
 class TestScalarFormatterLocator:
@@ -337,3 +407,16 @@ class TestScalarFormatterLocator:
         fl.spacing = 0.032 * u.m
         fl.format = 'x.xx'
         assert_almost_equal(fl.spacing.to_value(u.m), 0.03)
+
+    def test_values_unit(self):
+
+        # Make sure that the intrinsic unit and format unit are correctly
+        # taken into account when using the locator
+
+        fl = ScalarFormatterLocator(unit=u.cm, format_unit=u.m)
+        assert_quantity_allclose(fl.locator(850, 2150)[0],
+                                 [1000., 1200., 1400., 1600., 1800., 2000.] * u.cm)
+
+        fl = ScalarFormatterLocator(unit=u.cm, format_unit=u.m)
+        fl.format = 'x.x'
+        assert_quantity_allclose(fl.locator(1, 19)[0], [10] * u.cm)
