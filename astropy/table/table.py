@@ -283,12 +283,13 @@ class Table:
         # Set up a placeholder empty table
         self._set_masked(masked)
         self.columns = self.TableColumns()
+        print(1)
         self.meta = meta
         self.formatter = self.TableFormatter()
         self._copy_indices = True  # copy indices from this Table by default
         self._init_indices = copy_indices  # whether to copy indices in init
         self.primary_key = None
-
+        print(2)
         # Must copy if dtype are changing
         if not copy and dtype is not None:
             raise ValueError('Cannot specify dtype when copy=False')
@@ -685,7 +686,6 @@ class Table:
                                  'either Column or list-like')
 
             cols.append(col)
-
         self._init_from_cols(cols)
 
     def _init_from_ndarray(self, data, names, dtype, n_cols, copy):
@@ -767,6 +767,7 @@ class Table:
         # references to a single index object got *copied* into an independent
         # object.  This results in duplicates which will cause downstream problems.
         index_dict = {}
+
         for col in self.itercols():
             for i, index in enumerate(col.info.indices or []):
                 names = tuple(ind_col.info.name for ind_col in index.columns)
