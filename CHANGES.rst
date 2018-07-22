@@ -130,6 +130,8 @@ astropy.table
 - Add a new keyword argument ``serialize_method`` to ``Table.write`` to
   control how ``Time`` and ``MaskedColumn`` columns are written. [#7481]
 
+- Added support for stacking ``Column`` objects. [#7674]
+
 astropy.tests
 ^^^^^^^^^^^^^
 
