@@ -21,10 +21,9 @@ class TimeSeriesMaskedColumn(MaskedColumn):
 
 class TimeSeriesTableColumns(TableColumns):
 
-    def __init__(self, cols={}):
+    def __init__(self, cols={}, time=None):
         print(6)
 #        cols['time'] = time
-        print(cols)
         super().__init__(cols)
         print(7)
 
@@ -34,7 +33,7 @@ class TimeSeriesTableColumns(TableColumns):
         print(item, print(type(item)))
         try:
             time_column = super().__getitem__('time')
-            columns = [time_column, non_time_column]
+            columns = hstack([time_column, non_time_column])
         except KeyError:
             pass
         print(10)
@@ -81,9 +80,7 @@ class TimeSeries(QTable):
         if not isinstance(time, (Time, TimeDelta)):
             raise ValueError("'time' should be Time or TimeDelta")
         print(3)
-        self.time = time
-        if not hasattr(self.time.info, 'name'):
-            self.time.info.name = 'time'
+        self.time = self.Column(time, name='time')
         print(4)
         super().__init__(data=data, **kwargs)
         # TODO: check whether data had a 'time' column already
