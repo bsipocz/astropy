@@ -53,10 +53,10 @@ from .timeseries import TimeSeries, TimeSeriesColumn, TimeColumn
 # the documentation until all are loaded. (#5275)
 from ..io import registry
 
-#with registry.delay_doc_updates(Table):
-#    # Import routines that connect readers/writers to astropy.table
-#    from .jsviewer import JSViewer
-#    from ..io.ascii import connect
-#    from ..io.fits import connect
-#    from ..io.misc import connect
-#    from ..io.votable import connect
+with registry.delay_doc_updates(Table):
+    # Import routines that connect readers/writers to astropy.table
+    from .jsviewer import JSViewer
+    from ..io.ascii import connect
+    from ..io.fits import connect
+    from ..io.misc import connect
+    from ..io.votable import connect

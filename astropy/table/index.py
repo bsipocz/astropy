@@ -620,7 +620,7 @@ def get_index(table, table_copy):
         Subset of the columns in the table argument
     '''
     cols = set(table_copy.columns)
-    indices = set()
+
     for column in cols:
         for index in table[column].info.indices:
             if set([x.info.name for x in index.columns]) == cols:

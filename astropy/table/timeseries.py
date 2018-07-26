@@ -22,22 +22,20 @@ class TimeSeriesMaskedColumn(MaskedColumn):
 class TimeSeriesTableColumns(TableColumns):
 
     def __init__(self, cols={}):
-        print(6)
 #        cols['time'] = time
-        print(cols)
         super().__init__(cols)
-        print(7)
 
     def __getitem__(self, item):
-        print(8)
-        columns = non_time_column = super().__getitem__(item)
-        print(item, print(type(item)))
-        try:
-            time_column = super().__getitem__('time')
-            columns = [time_column, non_time_column]
-        except KeyError:
-            pass
-        print(10)
+        columns = super().__getitem__(item)
+
+        if item != 'time':
+            non_time_column = columns
+            try:
+                time_column = super().__getitem__('time')
+                columns = hstack([time_column, non_time_column])
+                columns.time = time_column
+            except KeyError:
+                pass
         return(columns)
 
 
@@ -71,25 +69,42 @@ class TimeSeries(QTable):
 
     TableColumns = TimeSeriesTableColumns
 
-    def __init__(self, data, time, time_delta=None, **kwargs):
+    def __init__(self, data, time=None, time_delta=None, **kwargs):
         """
         Time Series.
 
         Parameters
         ==========
         """
-        if not isinstance(time, (Time, TimeDelta)):
-            raise ValueError("'time' should be Time or TimeDelta")
-        print(3)
-        self.time = time
-        if not hasattr(self.time.info, 'name'):
-            self.time.info.name = 'time'
-        print(4)
-        super().__init__(data=data, **kwargs)
-        # TODO: check whether data had a 'time' column already
-        self.columns['time'] = self.time
-        print(5)
 
+        if not (isinstance(time, (Time, TimeDelta)) or not None):
+            raise ValueError("'time' should be Time or TimeDelta or provided in 'data'")
+
+        super().__init__(data=data, **kwargs)
+
+        if time is None:
+            # TODO: do more thorough checking for other input cases, when both data['time']
+            # TODO: and 'time' are provided, etc.
+            time = self.columns['time']
+            self.time = time
+        else:
+            self.time = time
+            if self.time.info.name is None:
+                self.time.info.name = 'time'
+            self.columns['time'] = time
+
+        #self.sort(['time'])
+        # TODO: short by time
+
+#    def closest(selfself, date):
+#        pass
+
+#    def sort(self):
+#        pass
+
+#    def argsort(self):
+#        pass
+#
 #    def __getitem__(self, item):
 #        if isinstance(item, str):
 #            return self.columns[item, self.time]

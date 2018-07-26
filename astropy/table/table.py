@@ -283,13 +283,12 @@ class Table:
         # Set up a placeholder empty table
         self._set_masked(masked)
         self.columns = self.TableColumns()
-        print(1)
         self.meta = meta
         self.formatter = self.TableFormatter()
         self._copy_indices = True  # copy indices from this Table by default
         self._init_indices = copy_indices  # whether to copy indices in init
         self.primary_key = None
-        print(2)
+
         # Must copy if dtype are changing
         if not copy and dtype is not None:
             raise ValueError('Cannot specify dtype when copy=False')
