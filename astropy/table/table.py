@@ -55,7 +55,7 @@ def descr(col):
     """
     col_dtype = 'O' if (col.info.dtype is None) else col.info.dtype
     col_shape = col.shape[1:] if hasattr(col, 'shape') else ()
-    return (col.info.name, col_dtype, col_shape)
+    return col.info.name, col_dtype, col_shape
 
 
 def has_info_class(obj, cls):
@@ -2254,6 +2254,8 @@ class Table:
 
         Parameters
         ----------
+        index : int
+            Index position in the Table to insert the new row.
         vals : tuple, list, dict or `None`
             Use the specified values in the new row
         mask : tuple, list, dict or `None`

@@ -192,7 +192,7 @@ def setdiff(table1, table2, keys=None):
     if keys is None:
         keys = table1.colnames
 
-    #Check that all keys are in table1 and table2
+    # Check that all keys are in table1 and table2
     for tbl, tbl_str in ((table1,'table1'), (table2,'table2')):
         diff_keys = np.setdiff1d(keys, tbl.colnames)
         if len(diff_keys) != 0:
@@ -373,7 +373,6 @@ def unique(input_table, keys=None, silent=False, keep='first'):
 
     Parameters
     ----------
-
     input_table : `~astropy.table.Table` object or a value that
         will initialize a `~astropy.table.Table` object
     keys : str or list of str
@@ -634,6 +633,11 @@ def _join(left, right, keys=None, join_type='inner',
     col_name_map : empty dict or None
         If passed as a dict then it will be updated in-place with the
         mapping of output to input column names.
+    metadata_conflicts : str
+        How to proceed with metadata conflicts. This should be one of:
+            * ``'silent'``: silently pick the last conflicting meta-data value
+            * ``'warn'``: pick the last conflicting meta-data value, but emit a warning (default)
+            * ``'error'``: raise an exception.
 
     Returns
     -------
@@ -786,9 +790,14 @@ def _vstack(arrays, join_type='outer', col_name_map=None, metadata_conflicts='wa
         Tables to stack by rows (vertically)
     join_type : str
         Join type ('inner' | 'exact' | 'outer'), default is 'outer'
-    col_name_map : empty dict or None
+    col_name_map : dict or None
         If passed as a dict then it will be updated in-place with the
         mapping of output to input column names.
+    metadata_conflicts : str
+        How to proceed with metadata conflicts. This should be one of:
+        * ``'silent'``: silently pick the last conflicting meta-data value
+        * ``'warn'``: pick the last conflicting meta-data value, but emit a warning (default)
+        * ``'error'``: raise an exception.
 
     Returns
     -------
@@ -879,7 +888,7 @@ def _vstack(arrays, join_type='outer', col_name_map=None, metadata_conflicts='wa
 
 
 def _hstack(arrays, join_type='outer', uniq_col_name='{col_name}_{table_name}',
-           table_names=None, col_name_map=None):
+            table_names=None, col_name_map=None):
     """
     Stack tables horizontally (by columns)
 
@@ -901,6 +910,9 @@ def _hstack(arrays, join_type='outer', uniq_col_name='{col_name}_{table_name}',
     table_names : list of str or None
         Two-element list of table names used when generating unique output
         column names.  The default is ['1', '2', ..].
+    col_name_map : dict or None
+        If passed as a dict then it will be updated in-place with the
+        mapping of output to input column names.
 
     Returns
     -------
