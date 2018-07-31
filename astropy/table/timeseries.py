@@ -31,12 +31,12 @@ class TimeSeriesTableColumns(TableColumns):
         if item != 'time':
             non_time_column = columns
             try:
-                time_column = TimeSeries([super().__getitem__('time')])
-                columns = hstack([time_column, non_time_column])
+                time_column = super().__getitem__('time')
+                columns = TimeSeries(data=[non_time_column,], time=time_column)
                 columns.time = time_column
             except KeyError:
                 pass
-        return(columns)
+        return columns
 
 
 class TimeColumn(Column):

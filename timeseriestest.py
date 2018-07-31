@@ -6,23 +6,42 @@ from datetime import datetime
 date = datetime(2018, 7, 1, 10, 10, 10)
 
 time = Time(['2016-03-22T12:30:31', '2015-01-21T12:30:32', '2016-03-22T12:30:40'])
-a = TimeSeries(time=time, data=[[1, 2, 3], [4, 5, 6]], names=['a', 'b'])
+a = TimeSeries(time=time, data=[[10, 2, 3], [4, 5, 6]], names=['a', 'b'])
+b = Table([[1, 2, 11], [3, 4, 1], [1, 1, 1]], names=['a', 'b', 'c'])
+c = TimeSeries()
 
-# works
-print(a['a'])
-print(a['a'].time[0])
+# works, but the types are off, a['a'] is not a TimeSeries but a Table with 18b941a9
+# failing to initialize an empty TimeSeries with 18b941a9
+print(9991, type(a['a']), a['a'])
+print(9992, type(a['a'].time[0]), a['a'].time[0])
+print(9993, a['time'])
+print(9994, type(c), c)
 
 # TODO
-print(a.columns['a'])
-print(a['a'][()])
+print(8993, a.columns['a'])  # This should give back 'a' as a normal Column
+print(8994, a['a'][()])   # This should give back 'a' as a normal Column
+print(8996, type(a[0]), a[0])   # This should give back a TimeRow rather than a normal Row
+
+# TODO
+# For this we need to be able to do TimeSeries([TimeSeries, TimeSeries, Time]) type initialization, or override TimeSeries.__getitem__
+# print(a['a', 'b'])
 
 # failing
-# a[0]
+# hstack TimeSeries
 
 t = Table([[1,2],[4,3]], names=['a', 'b'])
 t.add_index('b')
 
-a.sort('time')
+# Works:
+# b.sort('b')
+# print(99995, b)
+
+from astropy.table.index import get_index
+
+get_index(a, a['a'])
+print(a.sort('a'))
+
+#a.sort('time')
 """
 Decisions:
 
