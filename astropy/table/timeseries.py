@@ -22,7 +22,7 @@ class TimeSeriesMaskedColumn(MaskedColumn):
 class TimeSeriesTableColumns(TableColumns):
 
     def __init__(self, cols={}):
-#        cols['time'] = time
+        # cols['time'] = time
         super().__init__(cols)
 
     def __getitem__(self, item):
@@ -31,7 +31,7 @@ class TimeSeriesTableColumns(TableColumns):
         if item != 'time':
             non_time_column = columns
             try:
-                time_column = super().__getitem__('time')
+                time_column = TimeSeries([super().__getitem__('time')])
                 columns = hstack([time_column, non_time_column])
                 columns.time = time_column
             except KeyError:
@@ -63,13 +63,13 @@ class TimeSeries(QTable):
     #    A 'Time' index column exists which enforces unique indexes.
     #    The table is always sorted in terms of increasing time.
 
-#    Row = TimeSeriesRow
-#    Column = TimeSeriesColumn
-#    MaskedColumn = TimeSeriesMaskedColumn
+    # Row = TimeSeriesRow
+    # Column = TimeSeriesColumn
+    # MaskedColumn = TimeSeriesMaskedColumn
 
     TableColumns = TimeSeriesTableColumns
 
-    def __init__(self, data, time=None, time_delta=None, **kwargs):
+    def __init__(self, data=None, time=None, time_delta=None, **kwargs):
         """
         Time Series.
 
@@ -82,18 +82,24 @@ class TimeSeries(QTable):
 
         super().__init__(data=data, **kwargs)
 
+        # TODO: do more thorough checking for other input cases, when both data['time']
+        # TODO: and 'time' are provided, etc.
         if time is None:
-            # TODO: do more thorough checking for other input cases, when both data['time']
-            # TODO: and 'time' are provided, etc.
-            time = self.columns['time']
-            self.time = time
+            if data is not None:
+                time = self.columns['time']
+                self.time = time
+            else:
+                # TODO: figure out what to do with empty TimeSeries, Time() is not an option
+                self.time = None
         else:
             self.time = time
+
             if self.time.info.name is None:
                 self.time.info.name = 'time'
+
             self.columns['time'] = time
 
-        #self.sort(['time'])
+        # self.sort(['time'])
         # TODO: short by time
 
 #    def closest(selfself, date):
