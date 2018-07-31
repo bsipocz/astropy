@@ -3,6 +3,8 @@ from astropy.time import Time
 
 from datetime import datetime
 
+import astropy
+
 date = datetime(2018, 7, 1, 10, 10, 10)
 
 time = Time(['2016-03-22T12:30:31', '2015-01-21T12:30:32', '2016-03-22T12:30:40'])
@@ -30,7 +32,7 @@ print(8996, type(a[0]), a[0])   # This should give back a TimeRow rather than a 
 # hstack TimeSeries
 
 t = Table([[1,2],[4,3]], names=['a', 'b'])
-t.add_index('b')
+t.add_index('b', engine=astropy.table.BST)
 
 # Works:
 # b.sort('b')
@@ -41,7 +43,13 @@ from astropy.table.index import get_index
 get_index(a, a['a'])
 print(a.sort('a'))
 
-#a.sort('time')
+# failing
+# a.add_index('a')  # Failing with ValueError: too many values to unpack (expected 2)
+# a.add_index('time') # Failing with ValueError: Cannot replace column 'time'.  Use Table.replace_column() instead.
+# a.sort('time')
+
+
+
 """
 Decisions:
 
