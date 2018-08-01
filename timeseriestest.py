@@ -19,6 +19,8 @@ print(9992, type(a['a'].time[0]), a['a'].time[0])
 print(9993, a['time'])
 print(9994, type(c), c)
 
+print(3333, a['a'][0])
+
 # TODO
 print(8993, a.columns['a'])  # This should give back 'a' as a normal Column
 print(8994, a['a'][()])   # This should give back 'a' as a normal Column

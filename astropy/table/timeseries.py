@@ -8,7 +8,15 @@ __all__ = ['TimeSeries']
 
 
 class TimeSeriesColumn(Column):
-    pass
+
+    def __new__(cls, data=None, time=None, **kwargs):
+
+        self = super().__new__(cls, data=data, **kwargs)
+
+        if time is None:
+            time = super().__getitem__('time')
+        self.time = time
+        return self
 
 
 class TimeSeriesRow(Row):
