@@ -30,7 +30,7 @@ def deprecated(since, message='', name='', alternative='', pending=False,
     To mark an attribute as deprecated, use `deprecated_attribute`.
 
     Parameters
-    ------------
+    ----------
     since : str
         The release at which this API became deprecated.  This is
         required.

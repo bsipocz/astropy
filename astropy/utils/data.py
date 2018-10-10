@@ -931,7 +931,7 @@ def check_free_space_in_dir(path, size):
         A proposed filesize (in bytes)
 
     Raises
-    -------
+    ------
     OSError : There is not enough room on the filesystem
     """
     from ..utils.console import human_file_size

@@ -961,7 +961,7 @@ class Time(ShapedLikeNDArray):
         """Calculate sidereal time.
 
         Parameters
-        ---------------
+        ----------
         kind : str
             ``'mean'`` or ``'apparent'``, i.e., accounting for precession
             only, or also for nutation.

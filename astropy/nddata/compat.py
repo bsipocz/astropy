@@ -29,7 +29,7 @@ class NDDataArray(NDArithmeticMixin, NDSlicingMixin, NDIOMixin, NDData):
     and/or a coordinate system.
 
     Parameters
-    -----------
+    ----------
     data : `~numpy.ndarray` or `NDData`
         The actual data contained in this `NDData` object. Not that this
         will always be copies by *reference* , so you should make copy

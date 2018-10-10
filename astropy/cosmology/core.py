@@ -1698,7 +1698,7 @@ class LambdaCDM(FLRW):
           The dark energy equation of state
 
         Notes
-        ------
+        -----
         The dark energy equation of state is defined as
         :math:`w(z) = P(z)/\\rho(z)`, where :math:`P(z)` is the
         pressure at redshift z and :math:`\\rho(z)` is the density
@@ -2373,7 +2373,7 @@ class wCDM(FLRW):
           The dark energy equation of state
 
         Notes
-        ------
+        -----
         The dark energy equation of state is defined as
         :math:`w(z) = P(z)/\\rho(z)`, where :math:`P(z)` is the
         pressure at redshift z and :math:`\\rho(z)` is the density
@@ -2744,7 +2744,7 @@ class w0waCDM(FLRW):
           The dark energy equation of state
 
         Notes
-        ------
+        -----
         The dark energy equation of state is defined as
         :math:`w(z) = P(z)/\\rho(z)`, where :math:`P(z)` is the
         pressure at redshift z and :math:`\\rho(z)` is the density
@@ -3026,7 +3026,7 @@ class wpwaCDM(FLRW):
           The dark energy equation of state
 
         Notes
-        ------
+        -----
         The dark energy equation of state is defined as
         :math:`w(z) = P(z)/\\rho(z)`, where :math:`P(z)` is the
         pressure at redshift z and :math:`\\rho(z)` is the density
@@ -3202,7 +3202,7 @@ class w0wzCDM(FLRW):
           The dark energy equation of state
 
         Notes
-        ------
+        -----
         The dark energy equation of state is defined as
         :math:`w(z) = P(z)/\\rho(z)`, where :math:`P(z)` is the
         pressure at redshift z and :math:`\\rho(z)` is the density

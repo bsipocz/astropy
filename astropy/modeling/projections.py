@@ -194,7 +194,7 @@ class Pix2Sky_ZenithalPerspective(Pix2SkyProjection, Zenithal):
         R &= \sqrt{x^2 + y^2 \cos^2 \gamma}
 
     Parameters
-    --------------
+    ----------
     mu : float
         Distance from point of projection to center of sphere
         in spherical radii, μ.  Default is 0.
@@ -283,7 +283,7 @@ class Pix2Sky_SlantZenithalPerspective(Pix2SkyProjection, Zenithal):
     Corresponds to the ``SZP`` projection in FITS WCS.
 
     Parameters
-    --------------
+    ----------
     mu : float
         Distance from point of projection to center of sphere
         in spherical radii, μ.  Default is 0.

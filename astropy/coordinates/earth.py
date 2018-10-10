@@ -622,7 +622,7 @@ class EarthLocation(u.Quantity):
             The ``obstime`` to calculate the GCRS position/velocity at.
 
         Returns
-        --------
+        -------
         gcrs : `~astropy.coordinates.GCRS` instance
             With velocity included.
         """
@@ -648,7 +648,7 @@ class EarthLocation(u.Quantity):
             The ``obstime`` to calculate the GCRS position/velocity at.
 
         Returns
-        --------
+        -------
         obsgeoloc : `~astropy.coordinates.CartesianRepresentation`
             The GCRS position of the object
         obsgeovel : `~astropy.coordinates.CartesianRepresentation`
@@ -687,7 +687,7 @@ class EarthLocation(u.Quantity):
             pass in masses for other bodies.
 
         Returns
-        --------
+        -------
         redshift :  `~astropy.units.Quantity`
             Gravitational redshift in velocity units at given obstime.
         """

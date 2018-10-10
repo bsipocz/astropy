@@ -28,7 +28,7 @@ class NDData(NDDataBase):
     take a look at the ``See also`` section.
 
     Parameters
-    -----------
+    ----------
     data : `numpy.ndarray`-like or `NDData`-like
         The dataset.
 

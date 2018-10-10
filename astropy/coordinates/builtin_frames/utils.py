@@ -140,7 +140,7 @@ def get_cip(jd1, jd2):
         Second part of two part Julian date (TDB)
 
     Returns
-    --------
+    -------
     x : float or `np.ndarray`
         x coordinate of the CIP
     y : float or `np.ndarray`
@@ -183,7 +183,7 @@ def aticq(ri, di, astrom):
         ERFA astrometry context, as produced by, e.g. ``eraApci13`` or ``eraApcs13``
 
     Returns
-    --------
+    -------
     rc : float or `~numpy.ndarray`
     dc : float or `~numpy.ndarray`
     """
@@ -240,7 +240,7 @@ def atciqz(rc, dc, astrom):
         ERFA astrometry context, as produced by, e.g. ``eraApci13`` or ``eraApcs13``
 
     Returns
-    --------
+    -------
     ri : float or `~numpy.ndarray`
     di : float or `~numpy.ndarray`
     """
@@ -267,12 +267,12 @@ def prepare_earth_position_vel(time):
     Get barycentric position and velocity, and heliocentric position of Earth
 
     Parameters
-    -----------
+    ----------
     time : `~astropy.time.Time`
         time at which to calculate position and velocity of Earth
 
     Returns
-    --------
+    -------
     earth_pv : `np.ndarray`
         Barycentric position and velocity of Earth, in au and au/day
     earth_helio : `np.ndarray`
