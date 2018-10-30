@@ -2,13 +2,9 @@
 
 import warnings
 
-import os
-import sys
-import glob
 import ctypes
 import faulthandler
 import numpy as np
-from numpy.ctypeslib import ndpointer
 from functools import partial
 from .core import Kernel, Kernel1D, Kernel2D, MAX_NORMALIZATION
 from ..utils.exceptions import AstropyUserWarning
@@ -23,42 +19,6 @@ from .utils import KernelSizeError, has_even_axis, raise_even_kernel_exception
 # Turn the faulthandler ON to help catch any signals, e.g. segfaults
 # or asserts. This doesn't, currently, work with Jupyter Notebook.
 faulthandler.enable()
-
-# Find and load C convolution library
-lib_path = glob.glob(os.path.join(os.path.dirname(__file__), 'lib_convolve*'))[0]
-if sys.platform.startswith('win'):
-    libConvolve = ctypes.windll.LoadLibrary(lib_path)
-else:
-    libConvolve = ctypes.cdll.LoadLibrary(lib_path)
-
-
-# The GIL is automatically released by default when calling functions imported
-# from libaries loaded by ctypes.cdll.LoadLibrary(<path>)
-
-# Declare prototypes
-# Boundary None
-_convolveNd_boundary_none_c = libConvolve.convolveNd_boundary_none_c
-_convolveNd_boundary_none_c.restype = None
-_convolveNd_boundary_none_c.argtypes = [ndpointer(ctypes.c_double, flags={"C_CONTIGUOUS", "WRITEABLE"}), # return array
-            ndpointer(ctypes.c_double, flags="C_CONTIGUOUS"), # input array
-            ctypes.c_uint, # N dim
-            ndpointer(ctypes.c_size_t, flags="C_CONTIGUOUS"), # size array for return & input
-            ndpointer(ctypes.c_double, flags="C_CONTIGUOUS"), # kernel array
-            ndpointer(ctypes.c_size_t, flags="C_CONTIGUOUS"), # size array for kernel
-            ctypes.c_bool, # nan_interpolate
-            ctypes.c_uint] # n_threads
-
-# Padded boundaries ['fill', 'extend', 'wrap']
-_convolveNd_padded_boundary_c = libConvolve.convolveNd_padded_boundary_c
-_convolveNd_padded_boundary_c.restype = None
-_convolveNd_padded_boundary_c.argtypes = [ndpointer(ctypes.c_double, flags={"C_CONTIGUOUS", "WRITEABLE"}), # return array
-            ndpointer(ctypes.c_double, flags="C_CONTIGUOUS"), # input array
-            ctypes.c_uint, # N dim
-            ndpointer(ctypes.c_size_t, flags="C_CONTIGUOUS"), # size array for return & input
-            ndpointer(ctypes.c_double, flags="C_CONTIGUOUS"), # kernel array
-            ndpointer(ctypes.c_size_t, flags="C_CONTIGUOUS"), # size array for kernel
-            ctypes.c_bool, # nan_interpolate
-            ctypes.c_uint] # n_threads
 
 # Disabling all doctests in this module until a better way of handling warnings
 # in doctests can be determined
