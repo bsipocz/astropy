@@ -6,9 +6,9 @@ from abc import ABCMeta, abstractmethod
 
 import numpy as np
 
-import astropy.units as u
-from astropy.units import (Unit, UnitBase, UnitsError, UnitTypeError,
+from astropy.units import (Unit, UnitBase, UnitsError, UnitTypeError, UnitConversionError,
                            dimensionless_unscaled, Quantity)
+from . import logarithmic
 
 __all__ = ['FunctionUnitBase', 'FunctionQuantity']
 
@@ -257,12 +257,13 @@ class FunctionUnitBase(metaclass=ABCMeta):
                 # when other is not a function unit
                 return self.physical_unit.to(other, self.to_physical(value),
                                              equivalencies)
-            except u.UnitConversionError as e:
-                if type(self) == u.MagUnit and self.function_unit == Unit('mag'):
+            except UnitConversionError as e:
+                if isinstance(self, logarithmic.MagUnit) and self.function_unit == Unit('mag'):
                     # One can get to raw magnitudes via math that strips the dimensions off.
                     # Include extra information in the exception to remind users of this.
                     msg = "Did you perhaps subtract magnitudes so the unit got lost?"
-                    raise u.UnitConversionError(msg) from e
+                    e.args += (msg,)
+                    raise e
                 else:
                     raise
 
