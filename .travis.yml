@@ -74,6 +74,7 @@ env:
         - FLAKE8_OPT="--select=E101,W191,W291,W292,W293,W391,E111,E112,E113,E30,E502,E722,E901,E902,E999,F822,F823"
 
 stages:
+   - hacking
    # Do the style check and a single test job, don't proceed if it fails
    - name: Initial tests
    # Do the rest of the tests
@@ -88,6 +89,12 @@ matrix:
     fast_finish: true
 
     include:
+        - arch: arm64
+          language: python
+          python: 3.7
+          stage: hacking
+          env: USE_CI_HELPERS=False INSTALL_WITH_PIP=True EXTRAS_INSTALL="test"
+
         # Try MacOS X.
         - os: osx
           stage: Cron tests
