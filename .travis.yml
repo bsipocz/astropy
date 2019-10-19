@@ -89,7 +89,8 @@ matrix:
     fast_finish: true
 
     include:
-        - arch: arm64
+        - os: linux
+          arch: arm64
           language: python
           stage: hacking
           env: USE_CI_HELPERS=False INSTALL_WITH_PIP=True EXTRAS_INSTALL="test"
